@@ -5,22 +5,23 @@ package net.noiseinstitute.battledore_and_shuttlecock {
     public class GameWorld extends World {
         private static const SHUTTLECOCK_START_SPEED:Number = 4;
 
+        private var leftBattledore:Battledore = new Battledore();
+        private var rightBattledore:Battledore = new Battledore();
         private var shuttlecock:Shuttlecock = new Shuttlecock();
+        private var net:Net = new Net();
 
         public function GameWorld() {
-            var leftBattledore:Battledore = new Battledore();
             leftBattledore.offsetX = -Main.WIDTH * 0.34;
             add(leftBattledore);
 
-            var rightBattledore:Battledore = new Battledore();
             rightBattledore.offsetX = Main.WIDTH * 0.34;
             add(rightBattledore);
 
             shuttlecock.x = Main.WIDTH * 0.5;
             shuttlecock.y = Main.HEIGHT * 0.25;
+            shuttlecock.active = false;
             add(shuttlecock);
 
-            var net:Net = new Net();
             net.x = Main.WIDTH * 0.5;
             net.y = Main.HEIGHT;
             add(net);
@@ -37,6 +38,14 @@ package net.noiseinstitute.battledore_and_shuttlecock {
                 }
                 shuttlecock.velocity.x = direction * SHUTTLECOCK_START_SPEED;
                 shuttlecock.velocity.y = 0;
+
+                shuttlecock.active = true;
+            }
+
+            if (shuttlecock.collideWith(net, shuttlecock.x, shuttlecock.y)) {
+                shuttlecock.x = Main.WIDTH * 0.5;
+                shuttlecock.y = Main.HEIGHT * 0.25;
+                shuttlecock.active = false;
             }
 
             super.update();
