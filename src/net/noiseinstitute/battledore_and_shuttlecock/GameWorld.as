@@ -4,9 +4,11 @@ package net.noiseinstitute.battledore_and_shuttlecock {
     public class GameWorld extends World {
         public function GameWorld() {
             var leftBattledore:Battledore = new Battledore();
-            var rightBattledore:Battledore = new Battledore();
-
+            leftBattledore.offsetX = -Main.WIDTH * 0.34;
             add(leftBattledore);
+
+            var rightBattledore:Battledore = new Battledore();
+            rightBattledore.offsetX = Main.WIDTH * 0.34;
             add(rightBattledore);
 
             var shuttlecock:Shuttlecock = new Shuttlecock();
