@@ -4,6 +4,7 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
     public class GameWorld extends World {
         private static const SHUTTLECOCK_START_SPEED:Number = 4;
+        private static const LIFT_ON_HIT:Number = 4;
 
         private var leftBattledore:Battledore = new Battledore();
         private var rightBattledore:Battledore = new Battledore();
@@ -42,6 +43,12 @@ package net.noiseinstitute.battledore_and_shuttlecock {
                 shuttlecock.active = true;
             }
 
+            if (shuttlecock.collideWith(leftBattledore, shuttlecock.x, shuttlecock.y)) {
+                collideWithBattledore(leftBattledore);
+            } else if (shuttlecock.collideWith(rightBattledore, shuttlecock.x, shuttlecock.y)) {
+                collideWithBattledore(rightBattledore);
+            }
+
             if (shuttlecock.collideWith(net, shuttlecock.x, shuttlecock.y)
                     || shuttlecock.y > Main.HEIGHT
                     || shuttlecock.x < 0
@@ -52,6 +59,19 @@ package net.noiseinstitute.battledore_and_shuttlecock {
             }
 
             super.update();
+        }
+
+        private function collideWithBattledore(battledore:Battledore):void {
+            if (shuttlecock.x > battledore.x) {
+                if (shuttlecock.velocity.x < 0) {
+                    shuttlecock.velocity.x = -shuttlecock.velocity.x;
+                }
+            } else if (shuttlecock.velocity.x > 0) {
+                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            }
+
+            shuttlecock.velocity.x += battledore.velocity.x;
+            shuttlecock.velocity.y += battledore.velocity.y - LIFT_ON_HIT;
         }
     }
 }
