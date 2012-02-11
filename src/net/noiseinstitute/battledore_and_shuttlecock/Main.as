@@ -1,4 +1,4 @@
-package net.noiseinstitute.game {
+package net.noiseinstitute.battledore_and_shuttlecock {
     import net.flashpunk.Engine;
     import net.flashpunk.FP;
 
