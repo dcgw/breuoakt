@@ -10,6 +10,11 @@ package net.noiseinstitute.battledore_and_shuttlecock {
             add(rightBattledore);
 
             var shuttlecock:Shuttlecock = new Shuttlecock();
+
+            var net:Net = new Net();
+            net.x = Main.WIDTH * 0.5;
+            net.y = Main.HEIGHT;
+            add(net);
         }
     }
 }
