@@ -20,7 +20,6 @@ package net.noiseinstitute.battledore_and_shuttlecock {
             super(WIDTH, HEIGHT, LOGIC_FPS, true);
 
             FP.screen.color = 0x000000;
-            FP.console.enable();
 
             Input.define(KEY_LEFT, Key.LEFT);
             Input.define(KEY_RIGHT, Key.RIGHT);
