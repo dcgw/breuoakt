@@ -1,17 +1,32 @@
 package net.noiseinstitute.battledore_and_shuttlecock {
+    import net.flashpunk.Entity;
     import net.flashpunk.World;
+    import net.flashpunk.graphics.Text;
     import net.flashpunk.utils.Input;
 
     public class GameWorld extends World {
         private static const SHUTTLECOCK_START_SPEED:Number = 4;
         private static const LIFT_ON_HIT:Number = 4;
 
+        private var score:int = 0;
+
+        private var title:Text = new Text("Battledore and Shuttlecock");
+        private var scoreText:Text = new Text("click to start");
         private var leftBattledore:Battledore = new Battledore();
         private var rightBattledore:Battledore = new Battledore();
         private var shuttlecock:Shuttlecock = new Shuttlecock();
         private var net:Net = new Net();
 
         public function GameWorld() {
+            title.centerOrigin();
+            var titleEntity:Entity = new Entity(Main.WIDTH * 0.5, 16, title);
+            add(titleEntity);
+
+            scoreText.resizable = true;
+            scoreText.centerOrigin();
+            var scoreEntity:Entity = new Entity(Main.WIDTH * 0.5, 32, scoreText);
+            add(scoreEntity);
+
             leftBattledore.offsetX = -Main.WIDTH * 0.34;
             add(leftBattledore);
 
@@ -41,6 +56,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
                 shuttlecock.velocity.y = 0;
 
                 shuttlecock.active = true;
+
+                updateScore(0);
             }
 
             if (shuttlecock.collideWith(leftBattledore, shuttlecock.x, shuttlecock.y)) {
@@ -62,6 +79,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         }
 
         private function collideWithBattledore(battledore:Battledore):void {
+            updateScore(score+1);
+
             if (shuttlecock.x > battledore.x) {
                 if (shuttlecock.velocity.x < 0) {
                     shuttlecock.velocity.x = -shuttlecock.velocity.x;
@@ -72,6 +91,13 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
             shuttlecock.velocity.x += battledore.velocity.x;
             shuttlecock.velocity.y += battledore.velocity.y - LIFT_ON_HIT;
+        }
+
+        private function updateScore(newScore:int):void {
+            score = newScore;
+            scoreText.text = String(newScore);
+            scoreText.width = scoreText.textWidth;
+            scoreText.centerOrigin();
         }
     }
 }
