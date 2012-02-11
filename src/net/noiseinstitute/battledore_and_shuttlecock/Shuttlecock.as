@@ -5,6 +5,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
     import net.flashpunk.graphics.Image;
 
     public class Shuttlecock extends Entity {
+        private static const GRAVITY:Number = 0.1;
+
         public var velocity:Point = new Point;
 
         public function Shuttlecock() {
@@ -16,6 +18,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         }
 
         override public function update():void {
+            velocity.y += GRAVITY;
+
             x += velocity.x;
             y += velocity.y;
         }
