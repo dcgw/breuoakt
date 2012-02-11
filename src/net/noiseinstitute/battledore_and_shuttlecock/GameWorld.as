@@ -42,7 +42,10 @@ package net.noiseinstitute.battledore_and_shuttlecock {
                 shuttlecock.active = true;
             }
 
-            if (shuttlecock.collideWith(net, shuttlecock.x, shuttlecock.y)) {
+            if (shuttlecock.collideWith(net, shuttlecock.x, shuttlecock.y)
+                    || shuttlecock.y > Main.HEIGHT
+                    || shuttlecock.x < 0
+                    || shuttlecock.x > Main.WIDTH) {
                 shuttlecock.x = Main.WIDTH * 0.5;
                 shuttlecock.y = Main.HEIGHT * 0.25;
                 shuttlecock.active = false;
