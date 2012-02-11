@@ -1,10 +1,14 @@
 package net.noiseinstitute.battledore_and_shuttlecock {
     import net.flashpunk.Entity;
+    import net.flashpunk.Sfx;
     import net.flashpunk.World;
     import net.flashpunk.graphics.Text;
     import net.flashpunk.utils.Input;
 
     public class GameWorld extends World {
+        [Embed(source="bip.mp3")]
+        private static const BIP:Class;
+
         private static const SHUTTLECOCK_START_SPEED:Number = 4;
         private static const LIFT_ON_HIT:Number = 4;
 
@@ -16,6 +20,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         private var rightBattledore:Battledore = new Battledore();
         private var shuttlecock:Shuttlecock = new Shuttlecock();
         private var net:Net = new Net();
+
+        private var bip:Sfx = new Sfx(BIP);
 
         public function GameWorld() {
             title.centerOrigin();
@@ -79,6 +85,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         }
 
         private function collideWithBattledore(battledore:Battledore):void {
+            bip.play(1, (battledore.x - Main.WIDTH * 0.5) / (Main.WIDTH * 0.5));
+
             updateScore(score+1);
 
             if (shuttlecock.x > battledore.x) {
