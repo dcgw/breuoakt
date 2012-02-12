@@ -7,6 +7,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
     public class Battledore extends Entity {
         public var offsetX:Number = 0;
+        public var prevX:Number = 0;
+        public var prevY:Number = 0;
         public var velocity:Point = new Point;
 
         public function Battledore() {
@@ -18,14 +20,14 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         }
 
         override public function update():void {
-            var newX:Number = Input.mouseX + offsetX;
-            var newY:Number = Input.mouseY;
+            prevX = x;
+            prevY = y;
 
-            velocity.x = newX - x;
-            velocity.y = newY - y;
+            x = Input.mouseX + offsetX;
+            y = Input.mouseY;
 
-            x = newX;
-            y = newY;
+            velocity.x = x - prevX;
+            velocity.y = y - prevY;
 
             super.update();
         }
