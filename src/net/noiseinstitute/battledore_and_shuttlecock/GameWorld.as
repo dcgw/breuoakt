@@ -90,11 +90,19 @@ package net.noiseinstitute.battledore_and_shuttlecock {
             updateScore(score+1);
 
             if (shuttlecock.x > battledore.x) {
+                if (shuttlecock.x < battledore.x + (shuttlecock.width + battledore.width) * 0.5 + 1) {
+                    shuttlecock.x = battledore.x + (shuttlecock.width + battledore.width) * 0.5 + 1;
+                }
                 if (shuttlecock.velocity.x < 0) {
                     shuttlecock.velocity.x = -shuttlecock.velocity.x;
                 }
-            } else if (shuttlecock.velocity.x > 0) {
-                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            } else {
+                if (shuttlecock.x > battledore.x - (shuttlecock.width + battledore.width) * 0.5 - 1) {
+                    shuttlecock.x = battledore.x - (shuttlecock.width + battledore.width) * 0.5 -1;
+                }
+                if (shuttlecock.velocity.x > 0) {
+                    shuttlecock.velocity.x = -shuttlecock.velocity.x;
+                }
             }
 
             shuttlecock.velocity.x += battledore.velocity.x;
