@@ -7,16 +7,23 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
     public class Battledore extends Entity {
         public var offsetX:Number = 0;
+
         public var prevX:Number = 0;
         public var prevY:Number = 0;
+
+        public var battledoreWidth:Number = 8;
+        public var battledoreHeight:Number = 64;
+
         public var velocity:Point = new Point;
 
+        private var battledoreMask:BattledoreMask;
+
         public function Battledore() {
-            var image:Image = Image.createRect(8, 64);
+            var image:Image = Image.createRect(battledoreWidth, battledoreHeight);
             image.centerOrigin();
             graphic = image;
 
-            setHitbox(image.width, image.height, image.originX, image.originY);
+            mask = battledoreMask = new BattledoreMask(this);
         }
 
         override public function update():void {
@@ -28,6 +35,8 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
             velocity.x = x - prevX;
             velocity.y = y - prevY;
+
+            battledoreMask.updateMask();
 
             super.update();
         }
