@@ -91,7 +91,7 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
             updateScore(score+1);
 
-            if (shuttlecock.x > battledore.prevX) {
+            if (shuttlecock.prevX > battledore.prevX) {
                 if (shuttlecock.x < battledore.x + (shuttlecock.width + battledore.battledoreWidth) * 0.5 + 1) {
                     shuttlecock.x = battledore.x + (shuttlecock.width + battledore.battledoreWidth) * 0.5 + 1;
                 }

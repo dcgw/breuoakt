@@ -7,6 +7,9 @@ package net.noiseinstitute.battledore_and_shuttlecock {
     public class Shuttlecock extends Entity {
         private static const GRAVITY:Number = 0.1;
 
+        public var prevX:Number = 0;
+        public var prevY:Number = 0;
+
         public var velocity:Point = new Point;
 
         public function Shuttlecock() {
@@ -18,6 +21,9 @@ package net.noiseinstitute.battledore_and_shuttlecock {
         }
 
         override public function update():void {
+            prevX = x;
+            prevY = y;
+
             velocity.y += GRAVITY;
 
             x += velocity.x;
