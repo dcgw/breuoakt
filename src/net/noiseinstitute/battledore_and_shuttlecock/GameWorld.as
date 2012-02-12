@@ -66,10 +66,12 @@ package net.noiseinstitute.battledore_and_shuttlecock {
                 updateScore(0);
             }
 
-            if (shuttlecock.collideWith(leftBattledore, shuttlecock.x, shuttlecock.y)) {
-                collideWithBattledore(leftBattledore);
-            } else if (shuttlecock.collideWith(rightBattledore, shuttlecock.x, shuttlecock.y)) {
-                collideWithBattledore(rightBattledore);
+            if (shuttlecock.active) {
+                if (shuttlecock.collideWith(leftBattledore, shuttlecock.x, shuttlecock.y)) {
+                    collideWithBattledore(leftBattledore);
+                } else if (shuttlecock.collideWith(rightBattledore, shuttlecock.x, shuttlecock.y)) {
+                    collideWithBattledore(rightBattledore);
+                }
             }
 
             if (shuttlecock.collideWith(net, shuttlecock.x, shuttlecock.y)
