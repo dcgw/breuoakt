@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Ludum Dare Basecode" default="build">
   
-  <property name="preloader.class" value="net.noiseinstitute.game.Preloader"/>
-  <property name="main.class" value="net.noiseinstitute.game.Main"/>
+  <property name="preloader.class"
+      value="net.noiseinstitute.battledore_and_shuttlecock.Preloader"/>
+  <property name="main.class"
+      value="net.noiseinstitute.battledore_and_shuttlecock.Main"/>
   
   <property name="minimum.ant.version" value="1.8.0"/>
   
