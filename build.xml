@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Ludum Dare Basecode" default="build">
+<project name="Battledore and Shuttlecock" default="build">
   
   <property name="preloader.class"
       value="net.noiseinstitute.battledore_and_shuttlecock.Preloader"/>
