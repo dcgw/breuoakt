@@ -58,7 +58,7 @@
       </mapper>
       <path path="${src.dir}/${preloader.class}"/>
     </pathconvert>
-  
+    
     <mxmlc file="${preloader.file}"
         output="${build.dir}/Release.swf"
         debug="false" strict="true">

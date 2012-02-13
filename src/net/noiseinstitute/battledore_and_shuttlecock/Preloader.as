@@ -85,7 +85,7 @@ package net.noiseinstitute.battledore_and_shuttlecock {
 
                 progressBar.graphics.clear();
                 progressBar.graphics.beginFill(BACKGROUND_COLOUR);
-                progressBar.graphics.drawRect(0, 0,
+                progressBar.graphics.drawRect(progressBarX, progressBarY,
                         progress * progressBarWidth, progressBarHeight);
                 progressBar.graphics.endFill();
 
