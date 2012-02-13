@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Ludum Dare Basecode" default="build">
+  
+  <property name="preloader.class" value="net.noiseinstitute.game.Preloader"/>
+  <property name="main.class" value="net.noiseinstitute.game.Main"/>
+  
+  <property name="minimum.ant.version" value="1.8.0"/>
+  
+  <property environment="env"/>
+  
+  <property name="FLEX_HOME" location="${env.FLEX_HOME}"/>
+  
+  <property name="src.dir" location="src"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="build.dir" location="build"/>
+  
+  <property name="lib.flextasks" location="${lib.dir}/flexTasks.jar"/>
+  <property name="lib.flashpunk.dir" location="${lib.dir}/flashpunk"/>
+  
+  
+  <antversion property="ant.version.sufficient"
+      atleast="${minimum.ant.version}"/>
+  
+  <fail unless="ant.version.sufficient">
+    Ant ${minimum.ant.version} is required
+  </fail>
+  
+  
+  <fail message='Flex not found.&#xa;
+      &#xa;
+      You must set either the environment variable "FLEX_HOME"&#xa;
+      or the Ant property "FLEX_HOME" to the directory where the Flex&#xa;
+      SDK is installed.&#xa;
+      &#xa;
+      For example: ant -DFLEX_HOME=C:\Flex&#xa;'>
+    <condition>
+      <not>
+        <available file="${FLEX_HOME}" type="dir"/>
+      </not>
+    </condition>
+  </fail>
+  
+  
+  <taskdef resource="flexTasks.tasks" classpath="${lib.flextasks}"/>
+  
+  
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+  
+  <target name="build">
+    <pathconvert property="preloader.file">
+      <mapper>
+        <unpackagemapper from="${src.dir}/*" to="${src.dir}/*.as"
+            handledirsep="true"/>
+      </mapper>
+      <path path="${src.dir}/${preloader.class}"/>
+    </pathconvert>
+  
+    <mxmlc file="${preloader.file}"
+        output="${build.dir}/Release.swf"
+        debug="false" strict="true">
+      <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+      <source-path path-element="${src.dir}"/>
+      <source-path path-element="${lib.flashpunk.dir}"/>
+      <source-path path-element="${FLEX_HOME}/frameworks"/>
+      <frame label="start" className="${main.class}"/>
+    </mxmlc>
+  </target>
+</project>
