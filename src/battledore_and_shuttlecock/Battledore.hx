@@ -16,6 +16,8 @@ class Battledore extends Entity {
 
     public var velocity(default, null):Point;
 
+    var battledoreMask:BattledoreMask;
+
     public function new() {
         super();
 
@@ -29,6 +31,8 @@ class Battledore extends Entity {
         var image = new Image(new BitmapData(WIDTH, HEIGHT, false, 0xffffff));
         image.centerOrigin();
         graphic = image;
+
+        battledoreMask = new BattledoreMask(this);
     }
 
     override public function update (frame:Int) {
@@ -42,5 +46,7 @@ class Battledore extends Entity {
         // TODO smooth velocity
         velocity.x = x - prevX;
         velocity.y = y - prevY;
+
+        battledoreMask.updateMask();
     }
 }
