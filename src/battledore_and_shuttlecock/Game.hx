@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.input.digital.Button;
 import flash.Lib;
 import hopscotch.Playfield;
 import hopscotch.engine.Engine;
@@ -11,6 +12,8 @@ class Game extends Playfield {
 
     static inline var SHUTTLECOCK_START_SPEED = 4.0;
     static inline var LIFT_ON_HIT = 4.0;
+
+    var startButton:Button;
 
     var score:Int;
 
@@ -25,12 +28,19 @@ class Game extends Playfield {
 
     static function main () {
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
-        engine.playfield = new Game();
+
+        var startButton = new Button(); // TODO
+        engine.inputs.push(startButton);
+
+        engine.playfield = new Game(startButton);
         engine.start();
+
     }
 
-    public function new () {
+    public function new (startButton:Button) {
         super();
+
+        this.startButton = startButton;
 
         score = 0;
 
@@ -65,5 +75,27 @@ class Game extends Playfield {
         net.x = WIDTH * 0.5;
         net.y = HEIGHT;
         addEntity(net);
+    }
+
+    override public function update(frame:Int) {
+        if (startButton.pressed) {
+            shuttlecock.x = WIDTH * 0.5;
+            shuttlecock.y = HEIGHT *  0.25;
+
+            var direction = if (Math.random() * 2 < 1) -1 else 1;
+            shuttlecock.velocity.x = direction * SHUTTLECOCK_START_SPEED;
+            shuttlecock.velocity.y = 0;
+
+            shuttlecock.active = true;
+
+            updateScore(0);
+        }
+    }
+
+    function updateScore(score:Int) {
+        this.score = score;
+        //scoreText.text = Std.string(score);
+        //scoreText.width = scoreText.textWidth;
+        //scoreText.centerOrigin();
     }
 }
