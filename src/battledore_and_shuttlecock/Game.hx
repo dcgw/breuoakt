@@ -21,6 +21,7 @@ class Game extends Playfield {
     var rightBattledore:Battledore;
 
     var shuttlecock:Shuttlecock;
+    var net:Net;
 
     static function main () {
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
@@ -59,5 +60,10 @@ class Game extends Playfield {
         shuttlecock.y = HEIGHT * 0.25;
         shuttlecock.active = false;
         addEntity(shuttlecock);
+
+        net = new Net();
+        net.x = WIDTH * 0.5;
+        net.y = HEIGHT;
+        addEntity(net);
     }
 }
