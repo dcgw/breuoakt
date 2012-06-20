@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import flash.display.BitmapData;
+import hopscotch.graphics.Image;
 import flash.geom.Point;
 import hopscotch.Entity;
 
@@ -23,6 +25,10 @@ class Battledore extends Entity {
         prevY = 0;
 
         velocity = new Point();
+
+        var image = new Image(new BitmapData(WIDTH, HEIGHT, false, 0xffffff));
+        image.centerOrigin();
+        graphic = image;
     }
 
     override public function update (frame:Int) {
