@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.graphics.Image;
+import flash.display.BitmapData;
 import flash.geom.Point;
 import hopscotch.Entity;
 
@@ -9,18 +11,22 @@ class Shuttlecock extends Entity {
 
     static inline var GRAVITY = 0.1;
 
-    public var velocity:Point;
-
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
+
+    public var velocity:Point;
 
     public function new() {
         super();
 
-        velocity = new Point();
-
         prevX = 0;
         prevY = 0;
+
+        velocity = new Point();
+
+        var image = new Image(new BitmapData(WIDTH, HEIGHT, false, 0xffffff));
+        image.centerOrigin();
+        graphic = image;
     }
 
     override public function begin(frame:Int) {
