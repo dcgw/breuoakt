@@ -4,6 +4,9 @@ import flash.geom.Point;
 import hopscotch.Entity;
 
 class Shuttlecock extends Entity {
+    public static inline var WIDTH = 8;
+    public static inline var HEIGHT = 8;
+
     static inline var GRAVITY = 0.1;
 
     public var velocity:Point;

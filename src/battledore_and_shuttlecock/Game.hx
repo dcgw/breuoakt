@@ -90,6 +90,39 @@ class Game extends Playfield {
 
             updateScore(0);
         }
+
+        if (shuttlecock.active) {
+            //if (shuttlecock.collideWith(leftBattledore)) {
+            //    collideWithBattledore(leftBattledore);
+            //} else if (shuttlecock.collideWith(rightBattledore)) {
+            //    collideWithBattledore(rightBattledore);
+            //}
+        }
+    }
+
+    function collideWithBattledore (battledore:Battledore) {
+        //bip.play(1, (battledore.x - WIDTH * 0.5) / WIDTH * 0.5);
+
+        updateScore(score + 1);
+
+        if (shuttlecock.prevX > battledore.prevX) {
+            if (shuttlecock.x < battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1) {
+                shuttlecock.x = battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1;
+            }
+            if (shuttlecock.velocity.x < 0) {
+                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            }
+        } else {
+            if (shuttlecock.x > battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1) {
+                shuttlecock.x = battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1;
+            }
+            if (shuttlecock.velocity.x > 0) {
+                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            }
+        }
+
+        shuttlecock.velocity.x += battledore.velocity.x;
+        shuttlecock.velocity.y += battledore.velocity.y - LIFT_ON_HIT;
     }
 
     function updateScore(score:Int) {
