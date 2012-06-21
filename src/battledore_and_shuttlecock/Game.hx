@@ -105,20 +105,20 @@ class Game extends Playfield {
         }
 
         if (shuttlecock.active) {
-            //if (shuttlecock.collideWith(leftBattledore)) {
-            //    collideWithBattledore(leftBattledore);
-            //} else if (shuttlecock.collideWith(rightBattledore)) {
-            //    collideWithBattledore(rightBattledore);
-            //}
+            if (shuttlecock.collideEntity(leftBattledore)) {
+                collideWithBattledore(leftBattledore);
+            } else if (shuttlecock.collideEntity(rightBattledore)) {
+                collideWithBattledore(rightBattledore);
+            }
 
-            //if (shuttlecock.collideWith(net)
-            //        || shuttlecock.y > HEIGHT
-            //        || shuttlecock.x < 0
-            //        || shuttlecock.x > WIDTH) {
-            //    shuttlecock.x = WIDTH * 0.5;
-            //    shuttlecock.y = HEIGHT * 0.25;
-            //    shuttlecock.active = false;
-            //}
+            if (shuttlecock.collideEntity(net)
+                    || shuttlecock.y > HEIGHT
+                    || shuttlecock.x < 0
+                    || shuttlecock.x > WIDTH) {
+                shuttlecock.x = WIDTH * 0.5;
+                shuttlecock.y = HEIGHT * 0.25;
+                shuttlecock.active = false;
+            }
         }
     }
 

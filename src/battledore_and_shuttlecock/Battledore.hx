@@ -38,6 +38,7 @@ class Battledore extends Entity {
         this.pointer = pointer;
 
         battledoreMask = new BattledoreMask(this);
+        collisionMask = battledoreMask;
     }
 
     override public function update (frame:Int) {

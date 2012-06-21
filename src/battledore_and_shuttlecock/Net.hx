@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.collision.BoxMask;
 import flash.display.BitmapData;
 import hopscotch.graphics.Image;
 import hopscotch.Entity;
@@ -15,5 +16,7 @@ class Net extends Entity {
         image.originX = WIDTH * 0.5;
         image.originY = HEIGHT;
         graphic = image;
+
+        collisionMask = new BoxMask(-image.originX, -image.originY, WIDTH, HEIGHT);
     }
 }
