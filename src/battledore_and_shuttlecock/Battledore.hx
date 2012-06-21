@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.input.analogue.IPointer;
 import flash.display.BitmapData;
 import hopscotch.graphics.Image;
 import flash.geom.Point;
@@ -16,9 +17,11 @@ class Battledore extends Entity {
 
     public var velocity(default, null):Point;
 
+    var pointer:IPointer;
+
     var battledoreMask:BattledoreMask;
 
-    public function new() {
+    public function new(pointer:IPointer) {
         super();
 
         offsetX = 0;
@@ -32,6 +35,8 @@ class Battledore extends Entity {
         image.centerOrigin();
         graphic = image;
 
+        this.pointer = pointer;
+
         battledoreMask = new BattledoreMask(this);
     }
 
@@ -41,7 +46,8 @@ class Battledore extends Entity {
         prevX = x;
         prevY = y;
 
-        // TODO movement
+        x = pointer.x + offsetX;
+        y = pointer.y;
 
         // TODO smooth velocity
         velocity.x = x - prevX;

@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.input.analogue.Mouse;
+import hopscotch.input.analogue.IPointer;
 import haxe.PosInfos;
 import hopscotch.input.digital.MouseButton;
 import hopscotch.input.digital.Button;
@@ -15,6 +17,7 @@ class Game extends Playfield {
     static inline var SHUTTLECOCK_START_SPEED = 4.0;
     static inline var LIFT_ON_HIT = 4.0;
 
+    var pointer:IPointer;
     var startButton:Button;
 
     var score:Int;
@@ -38,11 +41,14 @@ class Game extends Playfield {
         var startButton = new MouseButton(Lib.current.stage);
         engine.inputs.push(startButton);
 
-        engine.playfield = new Game(startButton);
+        var pointer = new Mouse(Lib.current.stage);
+        engine.inputs.push(pointer);
+
+        engine.playfield = new Game(startButton, pointer);
         engine.start();
     }
 
-    public function new (startButton:Button) {
+    public function new (startButton:Button, pointer:IPointer) {
         super();
 
         this.startButton = startButton;
@@ -62,11 +68,11 @@ class Game extends Playfield {
         //scoreText.y = 32;
         //addGraphic(scoreText);
 
-        leftBattledore = new Battledore();
+        leftBattledore = new Battledore(pointer);
         leftBattledore.offsetX = -WIDTH * 0.34;
         addEntity(leftBattledore);
 
-        rightBattledore = new Battledore();
+        rightBattledore = new Battledore(pointer);
         rightBattledore.offsetX = WIDTH * 0.34;
         addEntity(rightBattledore);
 
