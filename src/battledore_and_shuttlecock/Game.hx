@@ -130,15 +130,17 @@ class Game extends Playfield {
         updateScore(score + 1);
 
         if (shuttlecock.prevX > battledore.prevX) {
-            if (shuttlecock.x < battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1) {
-                shuttlecock.x = battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1;
+            var collideX = battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1;
+            if (shuttlecock.x < collideX) {
+                shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
             if (shuttlecock.velocity.x < 0) {
                 shuttlecock.velocity.x = -shuttlecock.velocity.x;
             }
         } else {
-            if (shuttlecock.x > battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1) {
-                shuttlecock.x = battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1;
+            var collideX = battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1;
+            if (shuttlecock.x > collideX) {
+                shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
             if (shuttlecock.velocity.x > 0) {
                 shuttlecock.velocity.x = -shuttlecock.velocity.x;
