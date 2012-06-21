@@ -32,9 +32,11 @@ class Game extends Playfield {
     var net:Net;
 
     static function main () {
+        #if flash
         haxe.Log.trace = function(v:Dynamic, ?pos:PosInfos) {
             flash.Lib.trace(pos.fileName + ":" + pos.lineNumber + ": " + v);
         }
+        #end
 
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
 
@@ -97,7 +99,7 @@ class Game extends Playfield {
 
             var direction = if (Math.random() * 2 < 1) -1 else 1;
             shuttlecock.velocity.x = direction * SHUTTLECOCK_START_SPEED;
-            shuttlecock.velocity.y = 0;
+            shuttlecock.velocity.y = -1;
 
             shuttlecock.active = true;
 
