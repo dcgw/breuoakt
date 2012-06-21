@@ -1,6 +1,7 @@
 package battledore_and_shuttlecock;
 
 import haxe.PosInfos;
+import hopscotch.input.digital.MouseButton;
 import hopscotch.input.digital.Button;
 import flash.Lib;
 import hopscotch.Playfield;
@@ -34,12 +35,11 @@ class Game extends Playfield {
 
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
 
-        var startButton = new Button(); // TODO
+        var startButton = new MouseButton(Lib.current.stage);
         engine.inputs.push(startButton);
 
         engine.playfield = new Game(startButton);
         engine.start();
-
     }
 
     public function new (startButton:Button) {
@@ -83,6 +83,8 @@ class Game extends Playfield {
     }
 
     override public function update(frame:Int) {
+        super.update(frame);
+
         if (startButton.pressed) {
             shuttlecock.x = WIDTH * 0.5;
             shuttlecock.y = HEIGHT *  0.25;
