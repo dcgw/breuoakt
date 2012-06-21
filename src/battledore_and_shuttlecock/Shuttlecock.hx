@@ -1,6 +1,5 @@
 package battledore_and_shuttlecock;
 
-import hopscotch.collision.BoxMask;
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;
 import flash.geom.Point;
@@ -17,6 +16,8 @@ class Shuttlecock extends Entity {
 
     public var velocity:Point;
 
+    var movingBoxMask:MovingBoxMask;
+
     public function new() {
         super();
 
@@ -29,7 +30,8 @@ class Shuttlecock extends Entity {
         image.centerOrigin();
         graphic = image;
 
-        collisionMask = new BoxMask(-image.originX, -image.originY, WIDTH, HEIGHT);
+        movingBoxMask = new MovingBoxMask();
+        collisionMask = movingBoxMask;
     }
 
     override public function begin(frame:Int) {
@@ -49,5 +51,15 @@ class Shuttlecock extends Entity {
 
         x += velocity.x;
         y += velocity.y;
+
+        movingBoxMask.updateMask(
+                prevX - x - WIDTH * 0.5,
+                prevY - y - HEIGHT * 0.5,
+                WIDTH,
+                HEIGHT,
+                -WIDTH * 0.5,
+                -HEIGHT * 0.5,
+                WIDTH,
+                HEIGHT);
     }
 }
