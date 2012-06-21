@@ -47,10 +47,12 @@ class Battledore extends Entity {
         prevX = x;
         prevY = y;
 
-        x = pointer.x + offsetX;
-        y = pointer.y;
+        var targetX = pointer.x + offsetX;
+        var targetY = pointer.y;
 
-        // TODO smooth velocity
+        x += (targetX - x) * 0.2;
+        y += (targetY - y) * 0.2;
+
         velocity.x = x - prevX;
         velocity.y = y - prevY;
 
