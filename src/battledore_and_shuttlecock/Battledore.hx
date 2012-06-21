@@ -19,9 +19,9 @@ class Battledore extends Entity {
 
     var pointer:IPointer;
 
-    var battledoreMask:BattledoreMask;
+    var movingBoxMask:MovingBoxMask;
 
-    public function new(pointer:IPointer) {
+    public function new (pointer:IPointer) {
         super();
 
         offsetX = 0;
@@ -37,8 +37,8 @@ class Battledore extends Entity {
 
         this.pointer = pointer;
 
-        battledoreMask = new BattledoreMask(this);
-        collisionMask = battledoreMask;
+        movingBoxMask = new MovingBoxMask();
+        collisionMask = movingBoxMask;
     }
 
     override public function update (frame:Int) {
@@ -56,6 +56,14 @@ class Battledore extends Entity {
         velocity.x = x - prevX;
         velocity.y = y - prevY;
 
-        battledoreMask.updateMask();
+        movingBoxMask.updateMask(
+                prevX - x - WIDTH * 0.5,
+                prevY - y - HEIGHT * 0.5,
+                WIDTH,
+                HEIGHT,
+                -WIDTH * 0.5,
+                -HEIGHT * 0.5,
+                WIDTH,
+                HEIGHT);
     }
 }
