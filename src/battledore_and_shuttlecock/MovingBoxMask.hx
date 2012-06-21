@@ -29,6 +29,22 @@ class MovingBoxMask extends Mask {
         graphics.clear();
         graphics.lineStyle();
 
+        graphics.beginFill(0xff00ff, 1);
+        graphics.moveTo(x1, y1);
+        graphics.lineTo(x1 + w1, y1);
+        graphics.lineTo(x1 + w1, y1 + h1);
+        graphics.lineTo(x1, y1 + h1);
+        graphics.lineTo(x1, y1);
+        graphics.endFill();
+
+        graphics.beginFill(0x00ffff, 1);
+        graphics.moveTo(x2, y2);
+        graphics.lineTo(x2 + w2, y2);
+        graphics.lineTo(x2 + w2, y2 + h2);
+        graphics.lineTo(x2, y2 + h2);
+        graphics.lineTo(x2, y2);
+        graphics.endFill();
+
         graphics.beginFill(0xffffff, 1);
         graphics.moveTo(x1, y1);
         graphics.lineTo(x2, y2);
