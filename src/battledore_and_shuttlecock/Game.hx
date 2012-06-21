@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import haxe.PosInfos;
 import hopscotch.input.digital.Button;
 import flash.Lib;
 import hopscotch.Playfield;
@@ -27,6 +28,10 @@ class Game extends Playfield {
     var net:Net;
 
     static function main () {
+        haxe.Log.trace = function(v:Dynamic, ?pos:PosInfos) {
+            flash.Lib.trace(pos.fileName + ":" + pos.lineNumber + ": " + v);
+        }
+
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
 
         var startButton = new Button(); // TODO
