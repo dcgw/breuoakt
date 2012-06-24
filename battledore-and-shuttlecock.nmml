@@ -20,6 +20,8 @@
           resizable="true"
           hardware="false"/>
 
+  <assets path="assets" include="*.mp3"/>
+
   <classpath name="src"/>
   <classpath name="lib/hopscotch/src"/>
 

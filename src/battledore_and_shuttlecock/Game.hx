@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import flash.media.Sound;
+import nme.installer.Assets;
 import hopscotch.input.analogue.Mouse;
 import hopscotch.input.analogue.IPointer;
 import haxe.PosInfos;
@@ -30,6 +32,8 @@ class Game extends Playfield {
 
     var shuttlecock:Shuttlecock;
     var net:Net;
+
+    var bip:Sound;
 
     static function main () {
         #if flash
@@ -90,6 +94,15 @@ class Game extends Playfield {
         addEntity(net);
     }
 
+    override public function begin (frame:Int) {
+        super.begin(frame);
+
+        var music = Assets.getSound("assets/PreludeNo6InDMinor.mp3");
+        music.play(0, 2147483647);
+
+        bip = Assets.getSound("assets/bip.mp3");
+    }
+
     override public function update(frame:Int) {
         super.update(frame);
 
@@ -125,7 +138,7 @@ class Game extends Playfield {
     }
 
     function collideWithBattledore (battledore:Battledore) {
-        //bip.play(1, (battledore.x - WIDTH * 0.5) / WIDTH * 0.5);
+        bip.play(1);
 
         updateScore(score + 1);
 
