@@ -39,6 +39,7 @@ class CircleMask extends Mask {
 
     function collideCircle (mask2:CircleMask, x1:Float, y1:Float, x2:Float, y2:Float) {
         checkProperties();
+        mask2.checkProperties();
 
         Static.point.x = x + x1;
         Static.point.y = y + y1;
@@ -62,7 +63,7 @@ class CircleMask extends Mask {
         Static.point2.x = mask2.width * 0.5;
         Static.point2.y = mask2.height * 0.5;
 
-        return VectorMath.dot(Static.point2, Static.point) + radius < distance;
+        return distance < VectorMath.dot(Static.point2, Static.point) + radius;
     }
 
     public inline function checkProperties () {
