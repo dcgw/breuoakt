@@ -174,6 +174,5 @@ class Game extends Playfield {
     function updateScore(score:Int) {
         this.score = score;
         scoreText.text = Std.string(score);
-        //scoreText.centerOrigin();
     }
 }
