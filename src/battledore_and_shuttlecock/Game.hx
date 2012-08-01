@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import flash.text.TextFormatAlign;
+import hopscotch.graphics.Text;
 import flash.media.Sound;
 import nme.installer.Assets;
 import hopscotch.input.analogue.Mouse;
@@ -24,8 +26,8 @@ class Game extends Playfield {
 
     var score:Int;
 
-    //var title:Text;
-    //var scoreText:Text;
+    var title:Text;
+    var scoreText:Text;
 
     var leftBattledore:Battledore;
     var rightBattledore:Battledore;
@@ -61,18 +63,23 @@ class Game extends Playfield {
 
         score = 0;
 
-        //title = new Text("Battledore and Shuttlecock");
-        //title.centerOrigin();
-        //title.x = WIDTH * 0.5;
-        //title.y = 16;
-        //addGraphic(title);
+        title = new Text();
+        title.text = "Battledore and Shuttlecock";
+        title.wordWrap = true;
+        title.color = 0xffffff;
+        title.y = 16;
+        title.width = WIDTH;
+        title.align = TextFormatAlign.CENTER;
+        addGraphic(title);
 
-        //scoreText = new Text("click to start");
-        //scoreText.resizable = true;
-        //scoreText.centerOrigin();
-        //scoreText.x = WIDTH * 0.5;
-        //scoreText.y = 32;
-        //addGraphic(scoreText);
+        scoreText = new Text();
+        scoreText.text = "click to start";
+        scoreText.wordWrap = true;
+        scoreText.color = 0xffffff;
+        scoreText.y = 32;
+        scoreText.width = WIDTH;
+        scoreText.align = TextFormatAlign.CENTER;
+        addGraphic(scoreText);
 
         leftBattledore = new Battledore(pointer);
         leftBattledore.offsetX = -WIDTH * 0.34;
@@ -166,8 +173,7 @@ class Game extends Playfield {
 
     function updateScore(score:Int) {
         this.score = score;
-        //scoreText.text = Std.string(score);
-        //scoreText.width = scoreText.textWidth;
+        scoreText.text = Std.string(score);
         //scoreText.centerOrigin();
     }
 }
