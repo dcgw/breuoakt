@@ -47,6 +47,8 @@ class Game extends Playfield {
 
         var engine = new Engine(Lib.current, WIDTH, HEIGHT, LOGIC_RATE);
 
+        engine.console.enabled = false;
+
         var startButton = new MouseButton(Lib.current.stage);
         engine.inputs.push(startButton);
 
