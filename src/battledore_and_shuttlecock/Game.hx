@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import flash.media.SoundTransform;
 import hopscotch.graphics.FontFace;
 import flash.text.TextFormatAlign;
 import hopscotch.graphics.Text;
@@ -22,6 +23,9 @@ class Game extends Playfield {
     static inline var SHUTTLECOCK_START_SPEED = 4.0;
     static inline var LIFT_ON_HIT = 4.0;
 
+    static inline var MUSIC_VOLUME = 0.2;
+    static inline var BIP_VOLUME = 0.2;
+
     var pointer:IPointer;
     var startButton:Button;
 
@@ -36,7 +40,10 @@ class Game extends Playfield {
     var shuttlecock:Shuttlecock;
     var net:Net;
 
+    var musicPlaying:Bool;
+
     var bip:Sound;
+    var bipSoundTransform:SoundTransform;
 
     static function main () {
         #if flash
@@ -108,15 +115,15 @@ class Game extends Playfield {
         net.x = WIDTH * 0.5;
         net.y = HEIGHT;
         addEntity(net);
+
+        musicPlaying = false;
+
+        bip = Assets.getSound("assets/bip.mp3");
+        bipSoundTransform = new SoundTransform(BIP_VOLUME);
     }
 
     override public function begin (frame:Int) {
         super.begin(frame);
-
-        var music = Assets.getSound("assets/PreludeNo6InDMinor.mp3");
-        music.play(0, 2147483647);
-
-        bip = Assets.getSound("assets/bip.mp3");
     }
 
     override public function update(frame:Int) {
@@ -133,6 +140,13 @@ class Game extends Playfield {
             shuttlecock.active = true;
 
             updateScore(0);
+
+            if (!musicPlaying) {
+                var music = Assets.getSound("assets/PreludeNo6InDMinor.mp3");
+                var soundTransform = new SoundTransform(MUSIC_VOLUME);
+                music.play(0, 2147483647, soundTransform);
+                musicPlaying = true;
+            }
         }
 
         if (shuttlecock.active) {
@@ -154,7 +168,7 @@ class Game extends Playfield {
     }
 
     function collideWithBattledore (battledore:Battledore) {
-        bip.play(1);
+        bip.play(1, 0, bipSoundTransform);
 
         updateScore(score + 1);
 
