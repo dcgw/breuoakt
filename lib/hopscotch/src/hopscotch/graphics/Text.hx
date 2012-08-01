@@ -1,5 +1,7 @@
 package hopscotch.graphics;
 
+import flash.text.TextFormatAlign;
+import flash.text.TextFormatAlign;
 import hopscotch.Static;
 import flash.geom.ColorTransform;
 import flash.text.TextFormat;
@@ -11,6 +13,10 @@ import flash.display.BitmapData;
 import hopscotch.engine.ScreenSize;
 
 class Text implements IGraphic {
+    // Add this fudge value to measured text dimensions, because TextField.textWidth and TextField.textHeight
+    // are notoriously broken.
+    private static inline var TEXT_DIMENSIONS_FUDGE = 4;
+
     public var active:Bool;
     public var visible:Bool;
 
@@ -23,8 +29,11 @@ class Text implements IGraphic {
 
     public var fontFace:FontFace;
     public var fontSize:Float;
+
     public var color:UInt;
     public var alpha:Float;
+
+    public var align:TextFormatAlign;
 
     public var wordWrap:Bool;
     public var autoSize:Bool;
@@ -63,6 +72,13 @@ class Text implements IGraphic {
 
         outSize.x = textField.width;
         outSize.y = textField.height;
+    }
+
+    public function measureText(outSize:Point) {
+        updateTextField();
+
+        outSize.x = textField.textWidth + TEXT_DIMENSIONS_FUDGE;
+        outSize.y = textField.textHeight + TEXT_DIMENSIONS_FUDGE;
     }
 
     public function beginGraphic(frame:Int) {
@@ -130,6 +146,11 @@ class Text implements IGraphic {
             updated = true;
         }
 
+        if (textFormat.align != align) {
+            textFormat.align = align;
+            updated = true;
+        }
+
         if (textField.text != text) {
             textField.text = text;
             updated = true;
@@ -147,10 +168,10 @@ class Text implements IGraphic {
             if (updated) {
                 if (wordWrap) {
                     textField.width = width;
-                    textField.height = textField.textHeight + 4;
+                    textField.height = textField.textHeight + TEXT_DIMENSIONS_FUDGE;
                 } else {
-                    textField.width = textField.textWidth + 4;
-                    textField.height = textField.textHeight + 4;
+                    textField.width = textField.textWidth + TEXT_DIMENSIONS_FUDGE;
+                    textField.height = textField.textHeight + TEXT_DIMENSIONS_FUDGE;
                 }
             }
         } else {
