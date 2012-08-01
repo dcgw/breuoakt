@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.graphics.FontFace;
 import flash.text.TextFormatAlign;
 import hopscotch.graphics.Text;
 import flash.media.Sound;
@@ -63,8 +64,12 @@ class Game extends Playfield {
 
         score = 0;
 
+        var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
+
         title = new Text();
         title.text = "Battledore and Shuttlecock";
+        title.fontFace = fontFace;
+        title.fontSize = 16;
         title.wordWrap = true;
         title.color = 0xffffff;
         title.y = 16;
@@ -74,6 +79,8 @@ class Game extends Playfield {
 
         scoreText = new Text();
         scoreText.text = "click to start";
+        scoreText.fontFace = fontFace;
+        scoreText.fontSize = 16;
         scoreText.wordWrap = true;
         scoreText.color = 0xffffff;
         scoreText.y = 32;

@@ -21,6 +21,7 @@
           hardware="false"/>
 
   <assets path="assets" include="*.mp3"/>
+    <assets path="assets" include="*.ttf"/>
 
   <classpath name="src"/>
   <classpath name="lib/hopscotch/src"/>
