@@ -1,5 +1,6 @@
 package battledore_and_shuttlecock;
 
+import hopscotch.math.Range;
 import flash.media.SoundTransform;
 import hopscotch.graphics.FontFace;
 import flash.text.TextFormatAlign;
@@ -25,6 +26,7 @@ class Game extends Playfield {
 
     static inline var MUSIC_VOLUME = 0.2;
     static inline var BIP_VOLUME = 0.2;
+    static inline var BIP_PAN_AMOUNT = 0.2;
 
     var pointer:IPointer;
     var startButton:Button;
@@ -168,6 +170,7 @@ class Game extends Playfield {
     }
 
     function collideWithBattledore (battledore:Battledore) {
+        bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (shuttlecock.x - WIDTH*0.5) / WIDTH, 0, 1);
         bip.play(1, 0, bipSoundTransform);
 
         updateScore(score + 1);
