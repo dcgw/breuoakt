@@ -35,6 +35,7 @@ class Game extends Playfield {
     var kongregate:KongregateApi;
 
     var score:Int;
+    var highscore:Int;
 
     var title:Text;
     var scoreText:Text;
@@ -82,6 +83,7 @@ class Game extends Playfield {
         this.kongregate = kongregate;
 
         score = 0;
+        highscore = 0;
 
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
@@ -208,6 +210,9 @@ class Game extends Playfield {
     function updateScore(score:Int) {
         this.score = score;
         scoreText.text = Std.string(score);
-        kongregate.stats.submit("score", score);
+        if (score > highscore) {
+            highscore = score;
+            kongregate.stats.submit("Highscore", score);
+        }
     }
 }
