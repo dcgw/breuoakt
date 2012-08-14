@@ -229,7 +229,7 @@ class Game extends Playfield {
     }
 
     inline function checkSubmitHighscore(forceSubmit=false) {
-        if (forceSubmit || lastScoreSubmitFrame + SCORE_SUBMIT_INTERVAL < frame ) {
+        if (forceSubmit || lastScoreSubmitFrame + SCORE_SUBMIT_INTERVAL <= frame ) {
             if (score > submittedHighscore) {
                 kongregate.stats.submit("Highscore", score);
                 submittedHighscore = score;
