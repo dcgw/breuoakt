@@ -1,5 +1,7 @@
 package battledore_and_shuttlecock;
 
+import kong.KongregateApi;
+import kong.Kongregate;
 import hopscotch.math.Range;
 import flash.media.SoundTransform;
 import hopscotch.graphics.FontFace;
@@ -28,8 +30,9 @@ class Game extends Playfield {
     static inline var BIP_VOLUME = 0.2;
     static inline var BIP_PAN_AMOUNT = 0.2;
 
-    var pointer:IPointer;
     var startButton:Button;
+
+    var kongregate:KongregateApi;
 
     var score:Int;
 
@@ -64,14 +67,19 @@ class Game extends Playfield {
         var pointer = new Mouse(Lib.current.stage);
         engine.inputs.push(pointer);
 
-        engine.playfield = new Game(startButton, pointer);
-        engine.start();
+        Kongregate.getApi(function(kongregate:KongregateApi) {
+            kongregate.services.connect();
+            engine.playfield = new Game(startButton, pointer, kongregate);
+            engine.start();
+        });
     }
 
-    public function new (startButton:Button, pointer:IPointer) {
+    public function new (startButton:Button, pointer:IPointer, kongregate:KongregateApi) {
         super();
 
         this.startButton = startButton;
+
+        this.kongregate = kongregate;
 
         score = 0;
 
@@ -131,7 +139,7 @@ class Game extends Playfield {
     override public function update(frame:Int) {
         super.update(frame);
 
-        if (startButton.pressed) {
+        if (startButton.justPressed) {
             shuttlecock.x = WIDTH * 0.5;
             shuttlecock.y = HEIGHT *  0.25;
 
@@ -200,5 +208,6 @@ class Game extends Playfield {
     function updateScore(score:Int) {
         this.score = score;
         scoreText.text = Std.string(score);
+        kongregate.stats.submit("score", score);
     }
 }
