@@ -30,12 +30,17 @@ class Game extends Playfield {
     static inline var BIP_VOLUME = 0.2;
     static inline var BIP_PAN_AMOUNT = 0.2;
 
+    static inline var SCORE_SUBMIT_INTERVAL = 180;
+
     var startButton:Button;
 
     var kongregate:KongregateApi;
 
     var score:Int;
-    var highscore:Int;
+    var submittedHighscore:Int;
+
+    var frame:Int;
+    var lastScoreSubmitFrame:Int;
 
     var title:Text;
     var scoreText:Text;
@@ -83,7 +88,10 @@ class Game extends Playfield {
         this.kongregate = kongregate;
 
         score = 0;
-        highscore = 0;
+        submittedHighscore = 0;
+
+        frame = 0;
+        lastScoreSubmitFrame = 0;
 
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
@@ -135,13 +143,19 @@ class Game extends Playfield {
     }
 
     override public function begin (frame:Int) {
+        this.frame = frame;
+
         super.begin(frame);
     }
 
     override public function update(frame:Int) {
+        this.frame = frame;
+
         super.update(frame);
 
         if (startButton.justPressed) {
+            checkSubmitHighscore(true);
+
             shuttlecock.x = WIDTH * 0.5;
             shuttlecock.y = HEIGHT *  0.25;
 
@@ -172,6 +186,7 @@ class Game extends Playfield {
                     || shuttlecock.y > HEIGHT
                     || shuttlecock.x < 0
                     || shuttlecock.x > WIDTH) {
+                checkSubmitHighscore(true);
                 shuttlecock.x = WIDTH * 0.5;
                 shuttlecock.y = HEIGHT * 0.25;
                 shuttlecock.active = false;
@@ -210,9 +225,16 @@ class Game extends Playfield {
     function updateScore(score:Int) {
         this.score = score;
         scoreText.text = Std.string(score);
-        if (score > highscore) {
-            highscore = score;
-            kongregate.stats.submit("Highscore", score);
+        checkSubmitHighscore();
+    }
+
+    inline function checkSubmitHighscore(forceSubmit=false) {
+        if (forceSubmit || lastScoreSubmitFrame + SCORE_SUBMIT_INTERVAL < frame ) {
+            if (score > submittedHighscore) {
+                kongregate.stats.submit("Highscore", score);
+                submittedHighscore = score;
+                lastScoreSubmitFrame = frame;
+            }
         }
     }
 }
