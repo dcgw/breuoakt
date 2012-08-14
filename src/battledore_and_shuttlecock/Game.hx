@@ -73,7 +73,7 @@ class Game extends Playfield {
         var pointer = new Mouse(Lib.current.stage);
         engine.inputs.push(pointer);
 
-        Kongregate.getApi(function(kongregate:KongregateApi) {
+        Kongregate.loadApi(function(kongregate:KongregateApi) {
             kongregate.services.connect();
             engine.playfield = new Game(startButton, pointer, kongregate);
             engine.start();
