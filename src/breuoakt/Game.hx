@@ -168,7 +168,7 @@ class Game extends Playfield {
             updateScore(0);
 
             if (!musicPlaying) {
-                var music = Assets.getSound("assets/PreludeNo6InDMinor.mp3");
+                var music = Assets.getSound("assets/Music.mp3");
                 var soundTransform = new SoundTransform(MUSIC_VOLUME);
                 music.play(0, 2147483647, soundTransform);
                 musicPlaying = true;
