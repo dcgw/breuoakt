@@ -1,4 +1,4 @@
-package battledore_and_shuttlecock;
+package breuoakt;
 
 import kong.KongregateApi;
 import kong.Kongregate;

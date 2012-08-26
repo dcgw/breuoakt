@@ -1,4 +1,4 @@
-package battledore_and_shuttlecock;
+package breuoakt;
 
 import hopscotch.collision.BoxMask;
 import flash.display.Sprite;

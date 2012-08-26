@@ -6,12 +6,12 @@
   <haxedef name="fdb" if="target_flash" />
   <haxedef name="network-sandbox" if="target_flash"/>
 
-  <app file="battledore-and-shuttlecock"
-       title="Battledore and Shuttlecock"
-       package="net.noiseinstitute.battledore_and_shuttlecock"
+  <app file="breuoakt"
+       title="Breuoakt"
+       package="net.noiseinstitute.breuoakt"
        version="0"
        company="Daniel Cassidy"
-       main="battledore_and_shuttlecock.Game"/>
+       main="breuoakt.Game"/>
 
   <window width="${WIDTH}"
           height="${HEIGHT}"

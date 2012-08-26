@@ -1,4 +1,4 @@
-package battledore_and_shuttlecock;
+package breuoakt;
 
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;
