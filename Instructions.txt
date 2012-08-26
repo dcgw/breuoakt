@@ -1,1 +1,0 @@
-Move the mouse to move the Battledores. For each strike of the shuttlecock the player is awarded a point. A miscalculated stroke directing the shuttlecock into the net or out of bounds shall terminate play.
