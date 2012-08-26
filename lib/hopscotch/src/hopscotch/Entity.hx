@@ -1,5 +1,6 @@
 package hopscotch;
 
+import hopscotch.errors.IllegalOperationError;
 import hopscotch.collision.Mask;
 import hopscotch.graphics.IGraphic;
 import hopscotch.engine.ScreenSize;
@@ -74,7 +75,9 @@ class Entity implements IEntity {
     }
 
     public function render (target:BitmapData, position:Point, camera:Matrix) {
-        if (graphic != null && graphic.visible) {
+        if (graphic == null) {
+            throw new IllegalOperationError("Tried to render an entity that has no graphic");
+        } else if (graphic.visible) {
             tmpPoint.x = position.x + x;
             tmpPoint.y = position.y + y;
 
@@ -84,17 +87,17 @@ class Entity implements IEntity {
 
     public function collideEntity (entity:IEntity) {
         if (collisionMask == null) {
-            return false;
+            throw new IllegalOperationError("Tried to collide an entity that has no collision mask");
+        } else {
+            return entity.collideMask(collisionMask, x, y);
         }
-
-        return entity.collideMask(collisionMask, x, y);
     }
 
     public function collideMask (mask:Mask, maskX:Float, maskY:Float) {
         if (collisionMask == null) {
-            return false;
+            throw new IllegalOperationError("Tried to collide an entity that has no collision mask");
+        } else {
+            return collisionMask.collide(mask, x, y, maskX, maskY);
         }
-
-        return collisionMask.collide(mask, x, y, maskX, maskY);
     }
 }
