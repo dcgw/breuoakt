@@ -12,6 +12,8 @@ class Paddle extends Entity {
 
     public static inline var OFFSET_Y = -8;
 
+    public static inline var MIN_Y = Std.int(Game.HEIGHT * 0.5);
+
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
 
@@ -46,7 +48,7 @@ class Paddle extends Entity {
         prevY = y;
 
         var targetX = pointer.x;
-        var targetY = pointer.y + OFFSET_Y;
+        var targetY = Math.max(pointer.y + OFFSET_Y, MIN_Y);
 
         x += (targetX - x) * 0.2;
         y += (targetY - y) * 0.2;

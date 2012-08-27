@@ -23,6 +23,18 @@ class Game extends Playfield {
     public static inline var HEIGHT = 480;
     public static inline var LOGIC_RATE = 60;
 
+    static inline var BALL_START_X = WIDTH * 0.5;
+    static inline var BALL_START_Y = HEIGHT * 0.6;
+
+    static inline var TOP_BRICK_Y = 64;
+    static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
+
+    static inline var NUM_BRICKS_X = 15;
+    static inline var NUM_BRICKS_Y = 8;
+
+    static inline var BRICK_SPACING_X = 6;
+    static inline var BRICK_SPACING_Y = 4;
+
     static inline var SPRINGINESS = 0.2;
     static inline var HITTINESS = 0.5;
 
@@ -105,6 +117,24 @@ class Game extends Playfield {
 
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
+        paddle = new Paddle(pointer);
+        addEntity(paddle);
+
+        ball = new Ball();
+        ball.x = BALL_START_X;
+        ball.y = BALL_START_Y;
+        ball.active = false;
+        addEntity(ball);
+
+        for (x in 0...NUM_BRICKS_X) {
+            for (y in 0...NUM_BRICKS_Y) {
+                var brick = new Brick();
+                brick.x = LEFT_BRICK_X + x * (BRICK_SPACING_X + Brick.WIDTH);
+                brick.y = TOP_BRICK_Y + y * (BRICK_SPACING_Y + Brick.HEIGHT);
+                addEntity(brick);
+            }
+        }
+
         title = new Text();
         title.text = "Breuoakt";
         title.fontFace = fontFace;
@@ -127,15 +157,6 @@ class Game extends Playfield {
         scoreText.align = TextFormatAlign.CENTER;
         addGraphic(scoreText);
 
-        paddle = new Paddle(pointer);
-        addEntity(paddle);
-
-        ball = new Ball();
-        ball.x = WIDTH * 0.5;
-        ball.y = HEIGHT * 0.25;
-        ball.active = false;
-        addEntity(ball);
-
         musicPlaying = false;
 
         bip = Assets.getSound("assets/bip.mp3");
@@ -156,8 +177,8 @@ class Game extends Playfield {
         if (startButton.justPressed) {
             checkSubmitHighscore(true);
 
-            ball.x = WIDTH * 0.5;
-            ball.y = HEIGHT *  0.25;
+            ball.x = BALL_START_X;
+            ball.y = BALL_START_Y;
 
             ball.velocity.x = 0;
             ball.velocity.y = 0;
