@@ -23,8 +23,7 @@ class Game extends Playfield {
     static inline var HEIGHT = 480;
     static inline var LOGIC_RATE = 60;
 
-    static inline var SHUTTLECOCK_START_SPEED = 4.0;
-    static inline var LIFT_ON_HIT = 4.0;
+    static inline var SPRINGINESS = 0.5;
 
     static inline var MUSIC_VOLUME = 0.2;
     static inline var BIP_VOLUME = 0.2;
@@ -47,7 +46,7 @@ class Game extends Playfield {
 
     var paddle:Paddle;
 
-    var shuttlecock:Ball;
+    var ball:Ball;
 
     var musicPlaying:Bool;
 
@@ -118,11 +117,11 @@ class Game extends Playfield {
         paddle = new Paddle(pointer);
         addEntity(paddle);
 
-        shuttlecock = new Ball();
-        shuttlecock.x = WIDTH * 0.5;
-        shuttlecock.y = HEIGHT * 0.25;
-        shuttlecock.active = false;
-        addEntity(shuttlecock);
+        ball = new Ball();
+        ball.x = WIDTH * 0.5;
+        ball.y = HEIGHT * 0.25;
+        ball.active = false;
+        addEntity(ball);
 
         musicPlaying = false;
 
@@ -144,14 +143,13 @@ class Game extends Playfield {
         if (startButton.justPressed) {
             checkSubmitHighscore(true);
 
-            shuttlecock.x = WIDTH * 0.5;
-            shuttlecock.y = HEIGHT *  0.25;
+            ball.x = WIDTH * 0.5;
+            ball.y = HEIGHT *  0.25;
 
-            var direction = if (Math.random() * 2 < 1) -1 else 1;
-            shuttlecock.velocity.x = direction * SHUTTLECOCK_START_SPEED;
-            shuttlecock.velocity.y = -1;
+            ball.velocity.x = 0;
+            ball.velocity.y = 0;
 
-            shuttlecock.active = true;
+            ball.active = true;
 
             updateScore(0);
 
@@ -163,39 +161,39 @@ class Game extends Playfield {
             }
         }
 
-        if (shuttlecock.active) {
-            if (shuttlecock.collideEntity(paddle)) {
+        if (ball.active) {
+            if (ball.collideEntity(paddle)) {
                 collideWithPaddle(paddle);
             }
         }
     }
 
     function collideWithPaddle (paddle:Paddle) {
-        bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (shuttlecock.x - WIDTH*0.5) / WIDTH, 0, 1);
+        bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
         bip.play(1, 0, bipSoundTransform);
 
         updateScore(score + 1);
 
-        if (shuttlecock.prevX > paddle.prevX) {
-            var collideX = paddle.x + (Ball.WIDTH + Paddle.WIDTH) * 0.5 + 1;
-            if (shuttlecock.x < collideX) {
-                shuttlecock.x = collideX + collideX - shuttlecock.x;
+        if (ball.prevY > paddle.prevY) {
+            var collideY = paddle.y + (Ball.HEIGHT + Paddle.HEIGHT) * 0.5 + 1;
+            if (ball.y < collideY) {
+                ball.y = collideY + collideY - ball.y;
             }
-            if (shuttlecock.velocity.x < 0) {
-                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            if (ball.velocity.y < 0) {
+                ball.velocity.y = -SPRINGINESS * ball.velocity.y;
             }
         } else {
-            var collideX = paddle.x - (Ball.WIDTH + Paddle.WIDTH) * 0.5 - 1;
-            if (shuttlecock.x > collideX) {
-                shuttlecock.x = collideX + collideX - shuttlecock.x;
+            var collideY = paddle.y - (Ball.HEIGHT + Paddle.HEIGHT) * 0.5 + 1;
+            if (ball.y > collideY) {
+                ball.y = collideY + collideY - ball.y;
             }
-            if (shuttlecock.velocity.x > 0) {
-                shuttlecock.velocity.x = -shuttlecock.velocity.x;
+            if (ball.velocity.y > 0) {
+                ball.velocity.y = -SPRINGINESS * ball.velocity.y;
             }
         }
 
-        shuttlecock.velocity.x += paddle.velocity.x;
-        shuttlecock.velocity.y += paddle.velocity.y - LIFT_ON_HIT;
+        ball.velocity.x += paddle.velocity.x;
+        ball.velocity.y += paddle.velocity.y;
     }
 
     function updateScore(score:Int) {
