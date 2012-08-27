@@ -1,5 +1,6 @@
 package breuoakt;
 
+import flash.media.SoundChannel;
 import hopscotch.math.VectorMath;
 import flash.geom.Point;
 import kong.KongregateApi;
@@ -45,6 +46,8 @@ class Game extends Playfield {
     static inline var BIP_VOLUME = 0.2;
     static inline var BIP_PAN_AMOUNT = 0.2;
 
+    static inline var MIN_BIP_INTERVAL_FRAMES = 6;
+
     static inline var MIN_BIP_VELOCITY_CHANGE = 2;
     static inline var MAX_BIP_VELOCITY_CHANGE = 32;
 
@@ -73,7 +76,9 @@ class Game extends Playfield {
     var musicPlaying:Bool;
 
     var bip:Sound;
+    var bipSoundChannel:SoundChannel;
     var bipSoundTransform:SoundTransform;
+    var lastBipFrame:Int;
 
     static function main () {
         #if flash
@@ -173,7 +178,9 @@ class Game extends Playfield {
         musicPlaying = false;
 
         bip = Assets.getSound("assets/bip.mp3");
+        bipSoundChannel = null;
         bipSoundTransform = new SoundTransform();
+        lastBipFrame = -MIN_BIP_INTERVAL_FRAMES - 1;
     }
 
     override public function begin (frame:Int) {
@@ -313,11 +320,20 @@ class Game extends Playfield {
         var volume = VectorMath.magnitude(prevBallVelocity);
         volume = (volume - MIN_BIP_VELOCITY_CHANGE) * (MAX_BIP_VELOCITY_CHANGE - MIN_BIP_VELOCITY_CHANGE);
         volume = Range.clampFloat(volume, 0, 1);
+        volume *= BIP_VOLUME;
 
         if (volume > 0) {
-            bipSoundTransform.volume = volume * BIP_VOLUME;
-            bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
-            bip.play(1, 0, bipSoundTransform);
+            if (bipSoundChannel != null
+                    && lastBipFrame + MIN_BIP_INTERVAL_FRAMES > frame) {
+                if (volume > bipSoundChannel.soundTransform.volume) {
+                    bipSoundChannel.soundTransform.volume = volume;
+                }
+            } else {
+                bipSoundTransform.volume = volume;
+                bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
+                bipSoundChannel = bip.play(1, 0, bipSoundTransform);
+                lastBipFrame = frame;
+            }
         }
     }
 
