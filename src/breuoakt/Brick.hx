@@ -31,50 +31,26 @@ class Brick extends Entity {
             images.push(image);
         }
 
-        frame = -1;
-
-        nextColor();
-
         collisionMask = new BoxMask(-WIDTH*0.5, -HEIGHT*0.5, WIDTH, HEIGHT);
     }
 
     public function reset() {
         if (!visible) {
             visible = true;
-            nextColor();
 
-            hitFrame = 0;
-            spawnProbability = 0;
+            var image = images[Std.random(images.length)];
+            graphic = image;
+
+            image.scale = 0;
+            image.y = -16 - Math.random() * 32;
+            image.angle = (Math.random() - 0.5) * Math.PI/4;
+            Actuate.tween(image, 2, { scale: 1, y: 0, angle: 0 })
+                    .ease(Elastic.easeOut)
+                    .delay(Math.random() * 1);
         }
     }
 
     public function hit() {
         visible = false;
-        hitFrame = frame;
-        spawnProbability = 0;
-    }
-
-    override public function begin(frame:Int) {
-        this.frame = frame;
-
-        super.begin(frame);
-    }
-
-    override public function update(frame:Int) {
-        this.frame = frame;
-
-        super.update(frame);
-
-        if (!visible && hitFrame + MIN_HIDDEN_FRAMES < frame) {
-            if (Math.random() > 1 - spawnProbability) {
-                reset();
-            } else {
-                spawnProbability += SPAWN_PROBABILITY_INCREASE_PER_FRAME;
-            }
-        }
-    }
-
-    function nextColor() {
-        graphic = images[Std.random(images.length)];
     }
 }
