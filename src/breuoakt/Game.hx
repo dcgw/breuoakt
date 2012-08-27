@@ -61,6 +61,8 @@ class Game extends Playfield {
 
     var ball:Ball;
 
+    var bricks:Array<Brick>;
+
     var musicPlaying:Bool;
 
     var bip:Sound;
@@ -126,12 +128,14 @@ class Game extends Playfield {
         ball.active = false;
         addEntity(ball);
 
+        bricks = [];
         for (x in 0...NUM_BRICKS_X) {
             for (y in 0...NUM_BRICKS_Y) {
                 var brick = new Brick();
                 brick.x = LEFT_BRICK_X + x * (BRICK_SPACING_X + Brick.WIDTH);
                 brick.y = TOP_BRICK_Y + y * (BRICK_SPACING_Y + Brick.HEIGHT);
                 addEntity(brick);
+                bricks.push(brick);
             }
         }
 
@@ -196,6 +200,12 @@ class Game extends Playfield {
         }
 
         if (ball.active) {
+            for (brick in bricks) {
+                if (brick.visible && brick.collideEntity(ball)) {
+                    collideWithBrick(brick);
+                }
+            }
+
             if (ball.x - Ball.WIDTH * 0.5 < Wall.WIDTH) {
                 ball.x = Wall.WIDTH - ball.x + Wall.WIDTH + Ball.WIDTH;
                 if (ball.velocity.x < 0) {
@@ -219,6 +229,32 @@ class Game extends Playfield {
                 collideWithPaddle(paddle);
             }
         }
+    }
+
+    function collideWithBrick(brick:Brick) {
+        if (ball.prevX + Ball.WIDTH * 0.5 < brick.x - Brick.WIDTH * 0.5) {
+            if (ball.velocity.x > 0) {
+                ball.velocity.x = -ball.velocity.x;
+            }
+        } else if (ball.prevX - Ball.WIDTH * 0.5 > brick.x + Brick.WIDTH * 0.5) {
+            if (ball.velocity.x < 0) {
+                ball.velocity.x = -ball.velocity.x;
+            }
+        }
+
+        if (ball.prevY + Ball.HEIGHT * 0.5 < brick.y - Brick.HEIGHT * 0.5) {
+            if (ball.velocity.y > 0) {
+                ball.velocity.y = -ball.velocity.y;
+            }
+        } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
+            if (ball.velocity.y < 0) {
+                ball.velocity.y = -ball.velocity.y;
+            }
+        }
+
+        brick.hit();
+
+        updateScore(score + 1);
     }
 
     function collideWithPaddle (paddle:Paddle) {

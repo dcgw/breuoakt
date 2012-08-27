@@ -1,5 +1,6 @@
 package breuoakt;
 
+import hopscotch.collision.BoxMask;
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;
 import flash.geom.Point;
@@ -15,6 +16,8 @@ class Ball extends Entity {
     public var prevY(default, null):Float;
 
     public var velocity:Point;
+
+    public var boxMask(default, null):BoxMask;
 
     var movingBoxMask:MovingBoxMask;
 
@@ -32,6 +35,8 @@ class Ball extends Entity {
 
         movingBoxMask = new MovingBoxMask();
         collisionMask = movingBoxMask;
+
+        boxMask = new BoxMask(-image.originX, -image.originY, WIDTH, HEIGHT);
     }
 
     override public function begin(frame:Int) {
