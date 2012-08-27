@@ -19,11 +19,12 @@ import hopscotch.Playfield;
 import hopscotch.engine.Engine;
 
 class Game extends Playfield {
-    static inline var WIDTH = 640;
-    static inline var HEIGHT = 480;
-    static inline var LOGIC_RATE = 60;
+    public static inline var WIDTH = 640;
+    public static inline var HEIGHT = 480;
+    public static inline var LOGIC_RATE = 60;
 
-    static inline var SPRINGINESS = 0.5;
+    static inline var SPRINGINESS = 0.2;
+    static inline var HITTINESS = 0.5;
 
     static inline var MUSIC_VOLUME = 0.2;
     static inline var BIP_VOLUME = 0.2;
@@ -89,6 +90,18 @@ class Game extends Playfield {
 
         frame = 0;
         lastScoreSubmitFrame = 0;
+
+        var ceiling = new Ceiling();
+        addEntity(ceiling);
+
+        var wall = new Wall();
+        wall.y = Ceiling.HEIGHT;
+        addEntity(wall);
+
+        wall = new Wall();
+        wall.x = WIDTH - Wall.WIDTH;
+        wall.y = Ceiling.HEIGHT;
+        addEntity(wall);
 
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
@@ -162,6 +175,25 @@ class Game extends Playfield {
         }
 
         if (ball.active) {
+            if (ball.x - Ball.WIDTH * 0.5 < Wall.WIDTH) {
+                ball.x = Wall.WIDTH - ball.x + Wall.WIDTH + Ball.WIDTH;
+                if (ball.velocity.x < 0) {
+                    ball.velocity.x = -ball.velocity.x;
+                }
+            } else if (ball.x + Ball.WIDTH * 0.5 > WIDTH - Wall.WIDTH) {
+                ball.x = WIDTH - Wall.WIDTH - ball.x + WIDTH - Wall.WIDTH - Ball.WIDTH;
+                if (ball.velocity.x > 0) {
+                    ball.velocity.x = -ball.velocity.x;
+                }
+            }
+
+            if (ball.y < Ceiling.HEIGHT) {
+                ball.y = Ceiling.HEIGHT - ball.y + Ceiling.HEIGHT + Ball.HEIGHT;
+                if (ball.velocity.y < 0) {
+                    ball.velocity.y = -ball.velocity.y;
+                }
+            }
+
             if (ball.collideEntity(paddle)) {
                 collideWithPaddle(paddle);
             }
@@ -172,7 +204,8 @@ class Game extends Playfield {
         bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
         bip.play(1, 0, bipSoundTransform);
 
-        updateScore(score + 1);
+        var prevBallVelocityX = ball.velocity.x;
+        var prevBallVelocityY = ball.velocity.y;
 
         if (ball.prevY > paddle.prevY) {
             var collideY = paddle.y + (Ball.HEIGHT + Paddle.HEIGHT) * 0.5 + 1;
@@ -192,8 +225,10 @@ class Game extends Playfield {
             }
         }
 
-        ball.velocity.x += paddle.velocity.x;
-        ball.velocity.y += paddle.velocity.y;
+        ball.velocity.x += HITTINESS * (paddle.velocity.x - prevBallVelocityX);
+        ball.velocity.y += HITTINESS * (paddle.velocity.y - prevBallVelocityY);
+
+        var resting = Math.abs(ball.velocity.y) < 1.5;
     }
 
     function updateScore(score:Int) {
