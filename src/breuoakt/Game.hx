@@ -45,8 +45,7 @@ class Game extends Playfield {
     var title:Text;
     var scoreText:Text;
 
-    var leftBattledore:Battledore;
-    var rightBattledore:Battledore;
+    var paddle:Paddle;
 
     var shuttlecock:Shuttlecock;
     var net:Net;
@@ -117,13 +116,8 @@ class Game extends Playfield {
         scoreText.align = TextFormatAlign.CENTER;
         addGraphic(scoreText);
 
-        leftBattledore = new Battledore(pointer);
-        leftBattledore.offsetX = -WIDTH * 0.34;
-        addEntity(leftBattledore);
-
-        rightBattledore = new Battledore(pointer);
-        rightBattledore.offsetX = WIDTH * 0.34;
-        addEntity(rightBattledore);
+        paddle = new Paddle(pointer);
+        addEntity(paddle);
 
         shuttlecock = new Shuttlecock();
         shuttlecock.x = WIDTH * 0.5;
@@ -176,10 +170,8 @@ class Game extends Playfield {
         }
 
         if (shuttlecock.active) {
-            if (shuttlecock.collideEntity(leftBattledore)) {
-                collideWithBattledore(leftBattledore);
-            } else if (shuttlecock.collideEntity(rightBattledore)) {
-                collideWithBattledore(rightBattledore);
+            if (shuttlecock.collideEntity(paddle)) {
+                collideWithPaddle(paddle);
             }
 
             if (shuttlecock.collideEntity(net)
@@ -194,14 +186,14 @@ class Game extends Playfield {
         }
     }
 
-    function collideWithBattledore (battledore:Battledore) {
+    function collideWithPaddle (paddle:Paddle) {
         bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (shuttlecock.x - WIDTH*0.5) / WIDTH, 0, 1);
         bip.play(1, 0, bipSoundTransform);
 
         updateScore(score + 1);
 
-        if (shuttlecock.prevX > battledore.prevX) {
-            var collideX = battledore.x + (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 + 1;
+        if (shuttlecock.prevX > paddle.prevX) {
+            var collideX = paddle.x + (Shuttlecock.WIDTH + Paddle.WIDTH) * 0.5 + 1;
             if (shuttlecock.x < collideX) {
                 shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
@@ -209,7 +201,7 @@ class Game extends Playfield {
                 shuttlecock.velocity.x = -shuttlecock.velocity.x;
             }
         } else {
-            var collideX = battledore.x - (Shuttlecock.WIDTH + Battledore.WIDTH) * 0.5 - 1;
+            var collideX = paddle.x - (Shuttlecock.WIDTH + Paddle.WIDTH) * 0.5 - 1;
             if (shuttlecock.x > collideX) {
                 shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
@@ -218,8 +210,8 @@ class Game extends Playfield {
             }
         }
 
-        shuttlecock.velocity.x += battledore.velocity.x;
-        shuttlecock.velocity.y += battledore.velocity.y - LIFT_ON_HIT;
+        shuttlecock.velocity.x += paddle.velocity.x;
+        shuttlecock.velocity.y += paddle.velocity.y - LIFT_ON_HIT;
     }
 
     function updateScore(score:Int) {

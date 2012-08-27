@@ -6,11 +6,11 @@ import hopscotch.graphics.Image;
 import flash.geom.Point;
 import hopscotch.Entity;
 
-class Battledore extends Entity {
-    public static inline var WIDTH = 8;
-    public static inline var HEIGHT = 64;
+class Paddle extends Entity {
+    public static inline var WIDTH = 64;
+    public static inline var HEIGHT = 8;
 
-    public var offsetX:Float;
+    public static inline var OFFSET_Y = -8;
 
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
@@ -23,8 +23,6 @@ class Battledore extends Entity {
 
     public function new (pointer:IPointer) {
         super();
-
-        offsetX = 0;
 
         prevX = 0;
         prevY = 0;
@@ -47,8 +45,8 @@ class Battledore extends Entity {
         prevX = x;
         prevY = y;
 
-        var targetX = pointer.x + offsetX;
-        var targetY = pointer.y;
+        var targetX = pointer.x;
+        var targetY = pointer.y + OFFSET_Y;
 
         x += (targetX - x) * 0.2;
         y += (targetY - y) * 0.2;
