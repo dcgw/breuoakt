@@ -1,5 +1,7 @@
 package breuoakt;
 
+import hopscotch.math.VectorMath;
+import flash.geom.Point;
 import kong.KongregateApi;
 import kong.Kongregate;
 import hopscotch.math.Range;
@@ -39,8 +41,12 @@ class Game extends Playfield {
     static inline var HITTINESS = 0.5;
 
     static inline var MUSIC_VOLUME = 0.2;
+
     static inline var BIP_VOLUME = 0.2;
     static inline var BIP_PAN_AMOUNT = 0.2;
+
+    static inline var MIN_BIP_VELOCITY_CHANGE = 2;
+    static inline var MAX_BIP_VELOCITY_CHANGE = 32;
 
     static inline var SCORE_SUBMIT_INTERVAL = 180;
 
@@ -60,6 +66,7 @@ class Game extends Playfield {
     var paddle:Paddle;
 
     var ball:Ball;
+    var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
 
@@ -128,6 +135,8 @@ class Game extends Playfield {
         ball.active = false;
         addEntity(ball);
 
+        prevBallVelocity = new Point();
+
         bricks = [];
         for (x in 0...NUM_BRICKS_X) {
             for (y in 0...NUM_BRICKS_Y) {
@@ -164,7 +173,7 @@ class Game extends Playfield {
         musicPlaying = false;
 
         bip = Assets.getSound("assets/bip.mp3");
-        bipSoundTransform = new SoundTransform(BIP_VOLUME);
+        bipSoundTransform = new SoundTransform();
     }
 
     override public function begin (frame:Int) {
@@ -273,8 +282,8 @@ class Game extends Playfield {
     }
 
     function collideWithPaddle (paddle:Paddle) {
-        bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
-        bip.play(1, 0, bipSoundTransform);
+        prevBallVelocity.x = ball.velocity.x;
+        prevBallVelocity.y = ball.velocity.y;
 
         var prevBallVelocityX = ball.velocity.x;
         var prevBallVelocityY = ball.velocity.y;
@@ -300,7 +309,16 @@ class Game extends Playfield {
         ball.velocity.x += HITTINESS * (paddle.velocity.x - prevBallVelocityX);
         ball.velocity.y += HITTINESS * (paddle.velocity.y - prevBallVelocityY);
 
-        var resting = Math.abs(ball.velocity.y) < 1.5;
+        VectorMath.subtract(prevBallVelocity, ball.velocity);
+        var volume = VectorMath.magnitude(prevBallVelocity);
+        volume = (volume - MIN_BIP_VELOCITY_CHANGE) * (MAX_BIP_VELOCITY_CHANGE - MIN_BIP_VELOCITY_CHANGE);
+        volume = Range.clampFloat(volume, 0, 1);
+
+        if (volume > 0) {
+            bipSoundTransform.volume = volume * BIP_VOLUME;
+            bipSoundTransform.pan = Range.clampFloat(0.5 + BIP_PAN_AMOUNT * (ball.x - WIDTH*0.5) / WIDTH, 0, 1);
+            bip.play(1, 0, bipSoundTransform);
+        }
     }
 
     function updateScore(score:Int) {
