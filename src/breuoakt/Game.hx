@@ -47,7 +47,7 @@ class Game extends Playfield {
 
     var paddle:Paddle;
 
-    var shuttlecock:Shuttlecock;
+    var shuttlecock:Ball;
 
     var musicPlaying:Bool;
 
@@ -118,7 +118,7 @@ class Game extends Playfield {
         paddle = new Paddle(pointer);
         addEntity(paddle);
 
-        shuttlecock = new Shuttlecock();
+        shuttlecock = new Ball();
         shuttlecock.x = WIDTH * 0.5;
         shuttlecock.y = HEIGHT * 0.25;
         shuttlecock.active = false;
@@ -177,7 +177,7 @@ class Game extends Playfield {
         updateScore(score + 1);
 
         if (shuttlecock.prevX > paddle.prevX) {
-            var collideX = paddle.x + (Shuttlecock.WIDTH + Paddle.WIDTH) * 0.5 + 1;
+            var collideX = paddle.x + (Ball.WIDTH + Paddle.WIDTH) * 0.5 + 1;
             if (shuttlecock.x < collideX) {
                 shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
@@ -185,7 +185,7 @@ class Game extends Playfield {
                 shuttlecock.velocity.x = -shuttlecock.velocity.x;
             }
         } else {
-            var collideX = paddle.x - (Shuttlecock.WIDTH + Paddle.WIDTH) * 0.5 - 1;
+            var collideX = paddle.x - (Ball.WIDTH + Paddle.WIDTH) * 0.5 - 1;
             if (shuttlecock.x > collideX) {
                 shuttlecock.x = collideX + collideX - shuttlecock.x;
             }
