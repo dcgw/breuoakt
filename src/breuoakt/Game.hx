@@ -48,7 +48,6 @@ class Game extends Playfield {
     var paddle:Paddle;
 
     var shuttlecock:Shuttlecock;
-    var net:Net;
 
     var musicPlaying:Bool;
 
@@ -125,11 +124,6 @@ class Game extends Playfield {
         shuttlecock.active = false;
         addEntity(shuttlecock);
 
-        net = new Net();
-        net.x = WIDTH * 0.5;
-        net.y = HEIGHT;
-        addEntity(net);
-
         musicPlaying = false;
 
         bip = Assets.getSound("assets/bip.mp3");
@@ -172,16 +166,6 @@ class Game extends Playfield {
         if (shuttlecock.active) {
             if (shuttlecock.collideEntity(paddle)) {
                 collideWithPaddle(paddle);
-            }
-
-            if (shuttlecock.collideEntity(net)
-                    || shuttlecock.y > HEIGHT
-                    || shuttlecock.x < 0
-                    || shuttlecock.x > WIDTH) {
-                checkSubmitHighscore(true);
-                shuttlecock.x = WIDTH * 0.5;
-                shuttlecock.y = HEIGHT * 0.25;
-                shuttlecock.active = false;
             }
         }
     }
