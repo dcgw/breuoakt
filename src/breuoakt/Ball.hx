@@ -57,6 +57,10 @@ class Ball extends Entity {
         x += velocity.x;
         y += velocity.y;
 
+        if (y > Game.HEIGHT + HEIGHT) {
+            y = Game.HEIGHT + HEIGHT;
+        }
+
         movingBoxMask.updateMask(
                 prevX - x - WIDTH * 0.5,
                 prevY - y - HEIGHT * 0.5,
