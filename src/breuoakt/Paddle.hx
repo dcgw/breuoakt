@@ -26,8 +26,11 @@ class Paddle extends Entity {
     public function new (pointer:IPointer) {
         super();
 
-        prevX = 0;
-        prevY = 0;
+        x = Game.WIDTH * 0.5;
+        y = Game.HEIGHT * 0.85;
+
+        prevX = x;
+        prevY = y;
 
         velocity = new Point();
 
