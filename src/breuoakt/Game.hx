@@ -181,11 +181,7 @@ class Game extends Playfield {
         if (startButton.justPressed) {
             checkSubmitHighscore(true);
 
-            ball.x = BALL_START_X;
-            ball.y = BALL_START_Y;
-
-            ball.velocity.x = 0;
-            ball.velocity.y = 0;
+            reset();
 
             ball.active = true;
 
@@ -236,6 +232,18 @@ class Game extends Playfield {
                 collideWithPaddle(paddle);
             }
         }
+    }
+
+    function reset() {
+        for (brick in bricks) {
+            brick.reset();
+        }
+
+        ball.x = BALL_START_X;
+        ball.y = BALL_START_Y;
+
+        ball.velocity.x = 0;
+        ball.velocity.y = 0;
     }
 
     function collideWithBrick(brick:Brick) {
