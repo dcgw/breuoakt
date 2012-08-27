@@ -94,7 +94,7 @@ class Game extends Playfield {
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
         title = new Text();
-        title.text = "Battledore and Shuttlecock";
+        title.text = "Breuoakt";
         title.fontFace = fontFace;
         title.fontSize = 16;
         title.wordWrap = true;
