@@ -225,6 +225,13 @@ class Game extends Playfield {
                 }
             }
 
+            if (ball.y > HEIGHT + Ball.HEIGHT) {
+                checkSubmitHighscore(true);
+                ball.x = BALL_START_X;
+                ball.y = BALL_START_Y;
+                ball.active = false;
+            }
+
             if (ball.collideEntity(paddle)) {
                 collideWithPaddle(paddle);
             }
