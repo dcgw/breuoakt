@@ -80,6 +80,8 @@ class Game extends Playfield {
     var bipSoundTransform:SoundTransform;
     var lastBipFrame:Int;
 
+    var aws:Array<Sound>;
+
     static function main () {
         #if flash
         haxe.Log.trace = function(v:Dynamic, ?pos:PosInfos) {
@@ -181,6 +183,11 @@ class Game extends Playfield {
         bipSoundChannel = null;
         bipSoundTransform = new SoundTransform();
         lastBipFrame = -MIN_BIP_INTERVAL_FRAMES - 1;
+
+        aws = [];
+        for (i in 1...4) {
+            aws.push(Assets.getSound("assets/aw" + i + ".mp3"));
+        }
     }
 
     override public function begin (frame:Int) {
@@ -237,11 +244,13 @@ class Game extends Playfield {
                 }
             }
 
-            if (ball.y > HEIGHT + Ball.HEIGHT) {
+            if (ball.y > HEIGHT + Ball.HEIGHT * 0.5) {
                 checkSubmitHighscore(true);
                 ball.x = BALL_START_X;
                 ball.y = BALL_START_Y;
                 ball.active = false;
+
+                aws[Std.random(aws.length)].play();
             }
 
             if (ball.collideEntity(paddle)) {
