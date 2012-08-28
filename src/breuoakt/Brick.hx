@@ -1,5 +1,7 @@
 package breuoakt;
 
+import com.eclecticdesignstudio.motion.easing.Elastic;
+import com.eclecticdesignstudio.motion.Actuate;
 import hopscotch.collision.BoxMask;
 import flash.display.BitmapData;
 import hopscotch.graphics.Image;
@@ -31,6 +33,8 @@ class Brick extends Entity {
             images.push(image);
         }
 
+        nextColor();
+
         collisionMask = new BoxMask(-WIDTH*0.5, -HEIGHT*0.5, WIDTH, HEIGHT);
     }
 
@@ -38,8 +42,7 @@ class Brick extends Entity {
         if (!visible) {
             visible = true;
 
-            var image = images[Std.random(images.length)];
-            graphic = image;
+            var image = nextColor();
 
             image.scale = 0;
             image.y = -16 - Math.random() * 32;
@@ -52,5 +55,11 @@ class Brick extends Entity {
 
     public function hit() {
         visible = false;
+    }
+
+    function nextColor():Image {
+        var image = images[Std.random(images.length)];
+        graphic = image;
+        return image;
     }
 }
