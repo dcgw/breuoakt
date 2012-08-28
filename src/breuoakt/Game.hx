@@ -51,6 +51,8 @@ class Game extends Playfield {
     static inline var MIN_BIP_VELOCITY_CHANGE = 2;
     static inline var MAX_BIP_VELOCITY_CHANGE = 32;
 
+    static inline var POP_VOLUME = 0.2;
+
     static inline var SCORE_SUBMIT_INTERVAL = 180;
 
     var startButton:Button;
@@ -81,6 +83,9 @@ class Game extends Playfield {
     var lastBipFrame:Int;
 
     var aws:Array<Sound>;
+
+    var pops:Array<Sound>;
+    var popSoundTransform:SoundTransform;
 
     static function main () {
         #if flash
@@ -188,6 +193,13 @@ class Game extends Playfield {
         for (i in 1...4) {
             aws.push(Assets.getSound("assets/aw" + i + ".mp3"));
         }
+
+        pops = [];
+        for (i in 1...6) {
+            pops.push(Assets.getSound("assets/Pop" + i + ".mp3"));
+        }
+
+        popSoundTransform = new SoundTransform(POP_VOLUME);
     }
 
     override public function begin (frame:Int) {
@@ -292,6 +304,7 @@ class Game extends Playfield {
             }
         }
 
+        pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
         brick.hit();
 
         updateScore(score + 1);
