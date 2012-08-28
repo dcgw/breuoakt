@@ -50,11 +50,36 @@ class Brick extends Entity {
             Actuate.tween(image, 2, { scale: 1, y: 0, angle: 0 })
                     .ease(Elastic.easeOut)
                     .delay(Math.random() * 1);
+
+            hitFrame = 0;
+            spawnProbability = 0;
         }
     }
 
     public function hit() {
         visible = false;
+        hitFrame = frame;
+        spawnProbability = 0;
+    }
+
+    override public function begin(frame:Int) {
+        this.frame = frame;
+
+        super.begin(frame);
+    }
+
+    override public function update(frame:Int) {
+        this.frame = frame;
+
+        super.update(frame);
+
+        if (!visible && hitFrame + MIN_HIDDEN_FRAMES < frame) {
+            if (Math.random() > 1 - spawnProbability) {
+                reset();
+            } else {
+                spawnProbability += SPAWN_PROBABILITY_INCREASE_PER_FRAME;
+            }
+        }
     }
 
     function nextColor():Image {
