@@ -17,8 +17,6 @@ class Ball extends Entity {
 
     public var velocity:Point;
 
-    public var boxMask(default, null):BoxMask;
-
     var movingBoxMask:MovingBoxMask;
 
     public function new() {
@@ -35,8 +33,6 @@ class Ball extends Entity {
 
         movingBoxMask = new MovingBoxMask();
         collisionMask = movingBoxMask;
-
-        boxMask = new BoxMask(-image.originX, -image.originY, WIDTH, HEIGHT);
     }
 
     override public function begin(frame:Int) {

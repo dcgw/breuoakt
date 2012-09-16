@@ -65,15 +65,15 @@ class Game extends Playfield {
     var frame:Int;
     var lastScoreSubmitFrame:Int;
 
-    var title:Text;
-    var scoreText:Text;
-
     var paddle:Paddle;
 
     var ball:Ball;
     var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
+
+    var title:Text;
+    var scoreText:Text;
 
     var musicPlaying:Bool;
 
@@ -136,8 +136,6 @@ class Game extends Playfield {
         wall.y = Ceiling.HEIGHT;
         addEntity(wall);
 
-        var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
-
         paddle = new Paddle(pointer);
         addEntity(paddle);
 
@@ -159,6 +157,8 @@ class Game extends Playfield {
                 bricks.push(brick);
             }
         }
+
+        var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
         title = new Text();
         title.text = "Breuoakt";
