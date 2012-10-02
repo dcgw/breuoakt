@@ -3,7 +3,7 @@
   <set name="WIDTH" value="640"/>
   <set name="HEIGHT" value="480"/>
 
-  <haxedef name="fdb" if="target_flash" />
+  <haxedef name="fdb" if="target_flash"/>
   <haxedef name="network-sandbox" if="target_flash"/>
 
   <app file="breuoakt"
@@ -22,7 +22,7 @@
           hardware="false"/>
 
   <assets path="assets" include="*.mp3"/>
-    <assets path="assets" include="*.ttf"/>
+  <assets path="assets" include="*.ttf"/>
 
   <classpath name="src"/>
   <classpath name="lib/hopscotch/src"/>
