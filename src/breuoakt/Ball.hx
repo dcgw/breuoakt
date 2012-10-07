@@ -15,7 +15,7 @@ class Ball extends Entity {
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
 
-    public var velocity:Point;
+    public var velocity(default, null):Point;
 
     var movingBoxMask:MovingBoxMask;
 
