@@ -22,6 +22,8 @@ class Ball extends Entity {
 
     public var yayPrimed:Bool;
 
+    public var multiplier(default, null):Int;
+
     var movingBoxMask:MovingBoxMask;
 
     public function new() {
@@ -66,6 +68,16 @@ class Ball extends Entity {
         visible = false;
 
         yayPrimed = true;
+
+        resetMultiplier();
+    }
+
+    public function resetMultiplier() {
+        multiplier = 1;
+    }
+
+    public function incrementMultiplier() {
+        ++multiplier;
     }
 
     override public function begin(frame:Int) {

@@ -357,7 +357,9 @@ class Game extends Playfield {
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
         brick.hit();
 
-        updateScore(score + 1);
+        updateScore(score + 1 * numBallsInPlay * ball.multiplier);
+
+        ball.incrementMultiplier();
     }
 
     function collideWithPaddle (paddle:Paddle, ball:Ball) {
@@ -409,6 +411,8 @@ class Game extends Playfield {
         }
 
         ball.yayPrimed = true;
+
+        ball.resetMultiplier();
     }
 
     function updateScore(score:Int) {
