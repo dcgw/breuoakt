@@ -16,6 +16,8 @@ class Brick extends Entity {
 
     static var colors = [0x99dd92, 0x94c4d3, 0x949ace, 0xcc96b1];
 
+    public var prevVisible(default, null):Bool;
+
     var images:Array<Image>;
 
     var frame:Int;
@@ -36,10 +38,13 @@ class Brick extends Entity {
         nextColor();
 
         collisionMask = new BoxMask(-WIDTH*0.5, -HEIGHT*0.5, WIDTH, HEIGHT);
+
+        prevVisible = true;
     }
 
     public function reset() {
         if (!visible) {
+            prevVisible = true;
             visible = true;
 
             var image = nextColor();
@@ -80,6 +85,8 @@ class Brick extends Entity {
                 spawnProbability += SPAWN_PROBABILITY_INCREASE_PER_FRAME;
             }
         }
+
+        prevVisible = visible;
     }
 
     function nextColor():Image {
