@@ -53,7 +53,7 @@ class Game extends Playfield {
 
     static inline var POP_VOLUME = 0.2;
 
-    static inline var YAY_VOLUME = 0.2;
+    static inline var YAY_VOLUME = 0.3;
 
     static inline var SCORE_SUBMIT_INTERVAL = 180;
 
