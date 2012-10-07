@@ -1,5 +1,6 @@
 package breuoakt;
 
+import hopscotch.math.Range;
 import hopscotch.input.analogue.IPointer;
 import flash.display.BitmapData;
 import hopscotch.graphics.Image;
@@ -12,7 +13,9 @@ class Paddle extends Entity {
 
     public static inline var OFFSET_Y = -8;
 
-    public static inline var MIN_Y = Std.int(Game.HEIGHT * 0.5);
+    static inline var MIN_X = Std.int(Wall.WIDTH + WIDTH * 0.5);
+    static inline var MAX_X = Std.int(Game.WIDTH - Wall.WIDTH - WIDTH * 0.5);
+    static inline var MIN_Y = Std.int(Game.HEIGHT * 0.5);
 
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
@@ -53,7 +56,7 @@ class Paddle extends Entity {
         var targetX = pointer.x;
         var targetY = pointer.y + OFFSET_Y;
 
-        x += (targetX - x) * 0.2;
+        x = Range.clampFloat(x + (targetX - x) * 0.2, MIN_X, MAX_X);
         y = Math.max(y + (targetY - y) * 0.2, MIN_Y);
 
         velocity.x = x - prevX;
