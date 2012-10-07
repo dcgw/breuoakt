@@ -53,6 +53,8 @@ class Game extends Playfield {
 
     static inline var POP_VOLUME = 0.2;
 
+    static inline var YAY_VOLUME = 0.2;
+
     static inline var SCORE_SUBMIT_INTERVAL = 180;
 
     var startButton:Button;
@@ -86,6 +88,10 @@ class Game extends Playfield {
 
     var pops:Array<Sound>;
     var popSoundTransform:SoundTransform;
+
+    var yay:Sound;
+    var yaySoundTransform:SoundTransform;
+    var yayPrimed:Bool;
 
     static function main () {
         #if flash
@@ -200,6 +206,10 @@ class Game extends Playfield {
         }
 
         popSoundTransform = new SoundTransform(POP_VOLUME);
+
+        yay = Assets.getSound("assets/yay.mp3");
+        yaySoundTransform = new SoundTransform(YAY_VOLUME);
+        yayPrimed = true;
     }
 
     override public function begin (frame:Int) {
@@ -282,6 +292,8 @@ class Game extends Playfield {
 
         ball.velocity.x = 0;
         ball.velocity.y = 0;
+
+        yayPrimed = true;
     }
 
     function collideWithBrick(brickIndex:Int) {
@@ -308,6 +320,11 @@ class Game extends Playfield {
             // Ball is above brick
             if ((brickAbove == null || !brickAbove.prevVisible) && ball.velocity.y > 0) {
                 ball.velocity.y = -ball.velocity.y;
+            }
+
+            if (brickIndex < NUM_BRICKS_X && yayPrimed) {
+                yay.play(0, 0, yaySoundTransform);
+                yayPrimed = false;
             }
         } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
             // Ball is below brick
@@ -369,6 +386,8 @@ class Game extends Playfield {
                 lastBipFrame = frame;
             }
         }
+
+        yayPrimed = true;
     }
 
     function updateScore(score:Int) {
