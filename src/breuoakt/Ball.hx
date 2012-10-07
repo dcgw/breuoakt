@@ -10,6 +10,9 @@ class Ball extends Entity {
     public static inline var WIDTH = 8;
     public static inline var HEIGHT = 8;
 
+    public static inline var START_X = Game.WIDTH * 0.5;
+    public static inline var START_Y = Game.HEIGHT * 0.6;
+
     static inline var GRAVITY = 0.1;
 
     public var prevX(default, null):Float;
@@ -17,13 +20,12 @@ class Ball extends Entity {
 
     public var velocity(default, null):Point;
 
+    public var yayPrimed:Bool;
+
     var movingBoxMask:MovingBoxMask;
 
     public function new() {
         super();
-
-        prevX = 0;
-        prevY = 0;
 
         velocity = new Point();
 
@@ -33,6 +35,37 @@ class Ball extends Entity {
 
         movingBoxMask = new MovingBoxMask();
         collisionMask = movingBoxMask;
+
+        reset();
+    }
+
+    public function spawn(x, y) {
+        reset();
+
+        this.prevX = x;
+        this.prevY = y;
+
+        this.x = x;
+        this.y = y;
+
+        active = true;
+        visible = true;
+    }
+
+    public function reset() {
+        prevX = START_X;
+        prevY = START_Y;
+
+        x = START_X;
+        y = START_Y;
+
+        velocity.x = 0;
+        velocity.y = 0;
+
+        active = false;
+        visible = false;
+
+        yayPrimed = true;
     }
 
     override public function begin(frame:Int) {

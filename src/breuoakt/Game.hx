@@ -26,8 +26,9 @@ class Game extends Playfield {
     public static inline var HEIGHT = 480;
     public static inline var LOGIC_RATE = 60;
 
-    static inline var BALL_START_X = WIDTH * 0.5;
-    static inline var BALL_START_Y = HEIGHT * 0.6;
+    static inline var MAX_BALLS_IN_PLAY = 32;
+
+    static inline var BALL_SPAWN_DISTANCE_FROM_PADDLE = 64;
 
     static inline var TOP_BRICK_Y = 64;
     static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
@@ -69,7 +70,8 @@ class Game extends Playfield {
 
     var paddle:Paddle;
 
-    var ball:Ball;
+    var numBallsInPlay:Int;
+    var balls:Array<Ball>;
     var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
@@ -91,7 +93,6 @@ class Game extends Playfield {
 
     var yay:Sound;
     var yaySoundTransform:SoundTransform;
-    var yayPrimed:Bool;
 
     static function main () {
         #if flash
@@ -145,11 +146,13 @@ class Game extends Playfield {
         paddle = new Paddle(pointer);
         addEntity(paddle);
 
-        ball = new Ball();
-        ball.x = BALL_START_X;
-        ball.y = BALL_START_Y;
-        ball.active = false;
-        addEntity(ball);
+        balls = [];
+        for (i in 0...MAX_BALLS_IN_PLAY) {
+            var ball = new Ball();
+            balls.push(ball);
+            addEntity(ball);
+        }
+        numBallsInPlay = 0;
 
         prevBallVelocity = new Point();
 
@@ -209,11 +212,11 @@ class Game extends Playfield {
 
         yay = Assets.getSound("assets/yay.mp3");
         yaySoundTransform = new SoundTransform(YAY_VOLUME);
-        yayPrimed = true;
     }
 
     override public function begin (frame:Int) {
         this.frame = frame;
+        reset();
 
         super.begin(frame);
     }
@@ -228,7 +231,7 @@ class Game extends Playfield {
 
             reset();
 
-            ball.active = true;
+            spawnBall();
 
             updateScore(0);
 
@@ -240,63 +243,80 @@ class Game extends Playfield {
             }
         }
 
-        if (ball.active) {
-            for (i in 0...bricks.length) {
-                var brick = bricks[i];
-                if (brick.visible && brick.collideEntity(ball)) {
-                    collideWithBrick(i);
+        for (ball in balls) {
+            if (ball.active) {
+                for (i in 0...bricks.length) {
+                    var brick = bricks[i];
+                    if (brick.visible && brick.collideEntity(ball)) {
+                        collideWithBrick(i, ball);
+                    }
                 }
-            }
 
-            if (ball.x - Ball.WIDTH * 0.5 < Wall.WIDTH) {
-                ball.x = Wall.WIDTH - ball.x + Wall.WIDTH + Ball.WIDTH;
-                if (ball.velocity.x < 0) {
-                    ball.velocity.x = -ball.velocity.x;
+                if (ball.x - Ball.WIDTH * 0.5 < Wall.WIDTH) {
+                    ball.x = Wall.WIDTH - ball.x + Wall.WIDTH + Ball.WIDTH;
+                    if (ball.velocity.x < 0) {
+                        ball.velocity.x = -ball.velocity.x;
+                    }
+                } else if (ball.x + Ball.WIDTH * 0.5 > WIDTH - Wall.WIDTH) {
+                    ball.x = WIDTH - Wall.WIDTH - ball.x + WIDTH - Wall.WIDTH - Ball.WIDTH;
+                    if (ball.velocity.x > 0) {
+                        ball.velocity.x = -ball.velocity.x;
+                    }
                 }
-            } else if (ball.x + Ball.WIDTH * 0.5 > WIDTH - Wall.WIDTH) {
-                ball.x = WIDTH - Wall.WIDTH - ball.x + WIDTH - Wall.WIDTH - Ball.WIDTH;
-                if (ball.velocity.x > 0) {
-                    ball.velocity.x = -ball.velocity.x;
+
+                if (ball.y < Ceiling.HEIGHT) {
+                    ball.y = Ceiling.HEIGHT - ball.y + Ceiling.HEIGHT + Ball.HEIGHT;
+                    if (ball.velocity.y < 0) {
+                        ball.velocity.y = -ball.velocity.y;
+                    }
                 }
-            }
 
-            if (ball.y < Ceiling.HEIGHT) {
-                ball.y = Ceiling.HEIGHT - ball.y + Ceiling.HEIGHT + Ball.HEIGHT;
-                if (ball.velocity.y < 0) {
-                    ball.velocity.y = -ball.velocity.y;
+                if (ball.y > HEIGHT + Ball.HEIGHT * 0.5) {
+                    ball.reset();
+
+                    aws[Std.random(aws.length)].play();
+
+                    if (--numBallsInPlay == 0) {
+                        checkSubmitHighscore(true);
+                    }
                 }
-            }
 
-            if (ball.y > HEIGHT + Ball.HEIGHT * 0.5) {
-                checkSubmitHighscore(true);
-                ball.x = BALL_START_X;
-                ball.y = BALL_START_Y;
-                ball.active = false;
-
-                aws[Std.random(aws.length)].play();
-            }
-
-            if (ball.collideEntity(paddle)) {
-                collideWithPaddle(paddle);
+                if (ball.collideEntity(paddle)) {
+                    collideWithPaddle(paddle, ball);
+                }
             }
         }
     }
 
     function reset() {
+        for (ball in balls) {
+            ball.reset();
+        }
+        balls[0].visible = true;
+        numBallsInPlay = 0;
+
         for (brick in bricks) {
             brick.reset();
         }
-
-        ball.x = BALL_START_X;
-        ball.y = BALL_START_Y;
-
-        ball.velocity.x = 0;
-        ball.velocity.y = 0;
-
-        yayPrimed = true;
     }
 
-    function collideWithBrick(brickIndex:Int) {
+    function spawnBall(x=Ball.START_X, y=Ball.START_Y) {
+        if (numBallsInPlay >= MAX_BALLS_IN_PLAY) {
+            return;
+        }
+
+        var i = 0;
+        var ball = balls[numBallsInPlay];
+        while (ball.active) {
+            ++i;
+            ball = balls[(numBallsInPlay + i) % MAX_BALLS_IN_PLAY];
+        }
+
+        ball.spawn(x, y);
+        ++numBallsInPlay;
+    }
+
+    function collideWithBrick(brickIndex:Int, ball:Ball) {
         var brick = bricks[brickIndex];
 
         var brickAbove = if (brickIndex >= NUM_BRICKS_X) bricks[brickIndex - NUM_BRICKS_X] else null;
@@ -322,9 +342,10 @@ class Game extends Playfield {
                 ball.velocity.y = -ball.velocity.y;
             }
 
-            if (brickIndex < NUM_BRICKS_X && yayPrimed) {
+            if (brickIndex < NUM_BRICKS_X && ball.yayPrimed) {
+                spawnBall(paddle.x, paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE);
                 yay.play(0, 0, yaySoundTransform);
-                yayPrimed = false;
+                ball.yayPrimed = false;
             }
         } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
             // Ball is below brick
@@ -339,7 +360,7 @@ class Game extends Playfield {
         updateScore(score + 1);
     }
 
-    function collideWithPaddle (paddle:Paddle) {
+    function collideWithPaddle (paddle:Paddle, ball:Ball) {
         prevBallVelocity.x = ball.velocity.x;
         prevBallVelocity.y = ball.velocity.y;
 
@@ -387,7 +408,7 @@ class Game extends Playfield {
             }
         }
 
-        yayPrimed = true;
+        ball.yayPrimed = true;
     }
 
     function updateScore(score:Int) {
