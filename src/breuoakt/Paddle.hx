@@ -51,10 +51,10 @@ class Paddle extends Entity {
         prevY = y;
 
         var targetX = pointer.x;
-        var targetY = Math.max(pointer.y + OFFSET_Y, MIN_Y);
+        var targetY = pointer.y + OFFSET_Y;
 
         x += (targetX - x) * 0.2;
-        y += (targetY - y) * 0.2;
+        y = Math.max(y + (targetY - y) * 0.2, MIN_Y);
 
         velocity.x = x - prevX;
         velocity.y = y - prevY;
