@@ -342,10 +342,16 @@ class Game extends Playfield {
                 ball.velocity.y = -ball.velocity.y;
             }
 
-            if (brickIndex < NUM_BRICKS_X && ball.yayPrimed) {
-                spawnBall(paddle.x, paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE);
-                yay.play(0, 0, yaySoundTransform);
-                ball.yayPrimed = false;
+            if (ball.yayPrimed) {
+                var i = brickIndex - NUM_BRICKS_X;
+                while (i >= 0 && !bricks[i].prevVisible) {
+                    i -= NUM_BRICKS_X;
+                }
+                if (i < 0) {
+                    spawnBall(paddle.x, paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE);
+                    yay.play(0, 0, yaySoundTransform);
+                    ball.yayPrimed = false;
+                }
             }
         } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
             // Ball is below brick
