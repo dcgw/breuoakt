@@ -29,6 +29,9 @@ class Game extends Playfield {
     static inline var MAX_BALLS_IN_PLAY = 32;
 
     static inline var BALL_SPAWN_DISTANCE_FROM_PADDLE = 64;
+    static inline var BALL_SPAWN_MIN_DISTANCE_FROM_BRICKS = 16;
+    static inline var BALL_SPAWN_MIN_Y = TOP_BRICK_Y + NUM_BRICKS_Y * (Brick.HEIGHT + BRICK_SPACING_Y)
+            + BALL_SPAWN_MIN_DISTANCE_FROM_BRICKS;
 
     static inline var TOP_BRICK_Y = 64;
     static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
@@ -348,7 +351,8 @@ class Game extends Playfield {
                     i -= NUM_BRICKS_X;
                 }
                 if (i < 0) {
-                    spawnBall(paddle.x, paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE);
+                    var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
+                    spawnBall(paddle.x, ballSpawnY);
                     yay.play(0, 0, yaySoundTransform);
                     ball.yayPrimed = false;
                 }
