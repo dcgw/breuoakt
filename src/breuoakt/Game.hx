@@ -234,7 +234,8 @@ class Game extends Playfield {
 
             reset();
 
-            spawnBall();
+            balls[0].active = true;
+            numBallsInPlay = 1;
 
             updateScore(0);
 
@@ -303,14 +304,14 @@ class Game extends Playfield {
         }
     }
 
-    function spawnBall(x=Ball.START_X, y=Ball.START_Y) {
+    function spawnBall(x:Float, y:Float) {
         if (numBallsInPlay >= MAX_BALLS_IN_PLAY) {
             return;
         }
 
         var i = 0;
         var ball = balls[numBallsInPlay];
-        while (ball.active) {
+        while (ball.visible) {
             ++i;
             ball = balls[(numBallsInPlay + i) % MAX_BALLS_IN_PLAY];
         }

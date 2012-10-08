@@ -1,5 +1,7 @@
 package breuoakt;
 
+import com.eclecticdesignstudio.motion.easing.Linear;
+import com.eclecticdesignstudio.motion.Actuate;
 import hopscotch.collision.BoxMask;
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;
@@ -24,6 +26,8 @@ class Ball extends Entity {
 
     public var multiplier(default, null):Int;
 
+    var image:Image;
+
     var movingBoxMask:MovingBoxMask;
 
     public function new() {
@@ -31,7 +35,7 @@ class Ball extends Entity {
 
         velocity = new Point();
 
-        var image = new Image(new BitmapData(WIDTH, HEIGHT, false, 0xffffff));
+        image = new Image(new BitmapData(WIDTH, HEIGHT, false, 0xffffff));
         image.centerOrigin();
         graphic = image;
 
@@ -50,8 +54,14 @@ class Ball extends Entity {
         this.x = x;
         this.y = y;
 
-        active = true;
+        active = false;
         visible = true;
+
+        image.scale = 32;
+        image.alpha = 0;
+        Actuate.tween(image, 0.5, {scale: 1, alpha: 1})
+                .ease(Linear.easeNone)
+                .onComplete(onSpawnComplete);
     }
 
     public function reset() {
@@ -99,13 +109,17 @@ class Ball extends Entity {
         y += velocity.y;
 
         movingBoxMask.updateMask(
-                prevX - x - WIDTH * 0.5,
-                prevY - y - HEIGHT * 0.5,
-                WIDTH,
-                HEIGHT,
-                -WIDTH * 0.5,
-                -HEIGHT * 0.5,
-                WIDTH,
-                HEIGHT);
+            prevX - x - WIDTH * 0.5,
+            prevY - y - HEIGHT * 0.5,
+            WIDTH,
+            HEIGHT,
+            -WIDTH * 0.5,
+            -HEIGHT * 0.5,
+            WIDTH,
+            HEIGHT);
+    }
+
+    function onSpawnComplete() {
+        active = true;
     }
 }
