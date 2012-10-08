@@ -251,7 +251,7 @@ class Game extends Playfield {
             if (ball.active) {
                 for (i in 0...bricks.length) {
                     var brick = bricks[i];
-                    if (brick.visible && brick.collideEntity(ball)) {
+                    if (brick.collidable && brick.collideEntity(ball)) {
                         collideWithBrick(i, ball);
                     }
                 }
@@ -330,25 +330,25 @@ class Game extends Playfield {
 
         if (ball.prevX + Ball.WIDTH * 0.5 < brick.x - Brick.WIDTH * 0.5) {
             // Ball is to the left of brick
-            if ((brickLeft == null || !brickLeft.prevVisible) && ball.velocity.x > 0) {
+            if ((brickLeft == null || !brickLeft.prevCollidable) && ball.velocity.x > 0) {
                 ball.velocity.x = -ball.velocity.x;
             }
         } else if (ball.prevX - Ball.WIDTH * 0.5 > brick.x + Brick.WIDTH * 0.5) {
             // Ball is to the right of brick
-            if ((brickRight == null || !brickRight.prevVisible) && ball.velocity.x < 0) {
+            if ((brickRight == null || !brickRight.prevCollidable) && ball.velocity.x < 0) {
                 ball.velocity.x = -ball.velocity.x;
             }
         }
 
         if (ball.prevY + Ball.HEIGHT * 0.5 < brick.y - Brick.HEIGHT * 0.5) {
             // Ball is above brick
-            if ((brickAbove == null || !brickAbove.prevVisible) && ball.velocity.y > 0) {
+            if ((brickAbove == null || !brickAbove.prevCollidable) && ball.velocity.y > 0) {
                 ball.velocity.y = -ball.velocity.y;
             }
 
             if (ball.yayPrimed) {
                 var i = brickIndex - NUM_BRICKS_X;
-                while (i >= 0 && !bricks[i].prevVisible) {
+                while (i >= 0 && !bricks[i].prevCollidable) {
                     i -= NUM_BRICKS_X;
                 }
                 if (i < 0) {
@@ -360,7 +360,7 @@ class Game extends Playfield {
             }
         } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
             // Ball is below brick
-            if ((brickBelow == null || !brickBelow.prevVisible) && ball.velocity.y < 0) {
+            if ((brickBelow == null || !brickBelow.prevCollidable) && ball.velocity.y < 0) {
                 ball.velocity.y = -ball.velocity.y;
             }
         }

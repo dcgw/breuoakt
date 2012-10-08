@@ -16,7 +16,8 @@ class Brick extends Entity {
 
     static var colors = [0x99dd92, 0x94c4d3, 0x949ace, 0xcc96b1];
 
-    public var prevVisible(default, null):Bool;
+    public var collidable(default, null):Bool;
+    public var prevCollidable(default, null):Bool;
 
     var images:Array<Image>;
 
@@ -37,32 +38,22 @@ class Brick extends Entity {
 
         nextColor();
 
-        collisionMask = new BoxMask(-WIDTH*0.5, -HEIGHT*0.5, WIDTH, HEIGHT);
+        collisionMask = new BoxMask(-WIDTH * 0.5, -HEIGHT * 0.5, WIDTH, HEIGHT);
 
-        prevVisible = true;
+        collidable = true;
+        prevCollidable = true;
     }
 
     public function reset() {
-        if (!visible) {
-            prevVisible = true;
-            visible = true;
+        respawn();
 
-            var image = nextColor();
-
-            image.scale = 0;
-            image.y = -16 - Math.random() * 32;
-            image.angle = (Math.random() - 0.5) * Math.PI/4;
-            Actuate.tween(image, 2, { scale: 1, y: 0, angle: 0 })
-                    .ease(Elastic.easeOut)
-                    .delay(Math.random() * 1);
-
-            hitFrame = 0;
-            spawnProbability = 0;
-        }
+        prevCollidable = true;
+        collidable = true;
     }
 
     public function hit() {
         visible = false;
+        collidable = false;
         hitFrame = frame;
         spawnProbability = 0;
     }
@@ -80,16 +71,43 @@ class Brick extends Entity {
 
         if (!visible && hitFrame + MIN_HIDDEN_FRAMES < frame) {
             if (Math.random() > 1 - spawnProbability) {
-                reset();
+                respawn();
             } else {
                 spawnProbability += SPAWN_PROBABILITY_INCREASE_PER_FRAME;
             }
         }
 
-        prevVisible = visible;
+        prevCollidable = collidable;
     }
 
-    function nextColor():Image {
+    function respawn() {
+        if (!visible) {
+            prevCollidable = false;
+            collidable = false;
+            visible = true;
+
+            var image = nextColor();
+
+            image.scale = 0;
+            image.y = -16 - Math.random() * 32;
+            image.angle = (Math.random() - 0.5) * Math.PI / 4;
+            Actuate.timer(Math.random() * 1)
+                    .onComplete(function() {
+                        Actuate.tween(image, 2, {scale:1, y:0, angle:0})
+                                .ease(Elastic.easeOut);
+                        Actuate.timer(0.2)
+                                .onComplete(function() {
+                                    collidable = visible;
+                                    prevCollidable = visible;
+                                });
+                    });
+
+            hitFrame = 0;
+            spawnProbability = 0;
+        }
+    }
+
+    function nextColor() {
         var image = images[Std.random(images.length)];
         graphic = image;
         return image;
