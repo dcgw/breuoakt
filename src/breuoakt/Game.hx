@@ -307,6 +307,8 @@ class Game extends Playfield {
         for (brick in bricks) {
             brick.reset();
         }
+
+        banners.reset();
     }
 
     function spawnBall(x:Float, y:Float) {
