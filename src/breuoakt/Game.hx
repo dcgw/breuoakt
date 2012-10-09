@@ -55,6 +55,9 @@ class Game extends Playfield {
     static inline var MIN_BIP_VELOCITY_CHANGE = 2;
     static inline var MAX_BIP_VELOCITY_CHANGE = 32;
 
+    static inline var MIN_SUFFICIENTLY_IMPRESSIVE_POINTS = 4;
+    static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 60;
+
     static inline var POP_VOLUME = 0.2;
 
     static inline var YAY_VOLUME = 0.3;
@@ -78,6 +81,10 @@ class Game extends Playfield {
     var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
+
+    var banners:Banners;
+    var sufficientlyImpressivePoints:Int;
+    var sufficientlyImpressivePointsLastUpdatedFrame:Int;
 
     var title:Text;
     var scoreText:Text;
@@ -170,6 +177,12 @@ class Game extends Playfield {
             }
         }
 
+        banners = new Banners();
+        addGraphic(banners);
+
+        sufficientlyImpressivePoints = MIN_SUFFICIENTLY_IMPRESSIVE_POINTS;
+        sufficientlyImpressivePointsLastUpdatedFrame = 0;
+
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
         title = new Text();
@@ -247,6 +260,13 @@ class Game extends Playfield {
             }
         }
 
+        if (sufficientlyImpressivePoints > MIN_SUFFICIENTLY_IMPRESSIVE_POINTS
+                && frame - sufficientlyImpressivePointsLastUpdatedFrame
+                >= SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES) {
+            sufficientlyImpressivePoints >>= 1;
+            sufficientlyImpressivePointsLastUpdatedFrame = frame;
+        }
+
         for (ball in balls) {
             if (ball.active) {
                 for (i in 0...bricks.length) {
@@ -302,6 +322,9 @@ class Game extends Playfield {
         for (brick in bricks) {
             brick.reset();
         }
+
+        sufficientlyImpressivePoints = MIN_SUFFICIENTLY_IMPRESSIVE_POINTS;
+        sufficientlyImpressivePointsLastUpdatedFrame = frame;
     }
 
     function spawnBall(x:Float, y:Float) {
@@ -368,7 +391,15 @@ class Game extends Playfield {
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
         brick.hit();
 
-        updateScore(score + 1 * numBallsInPlay * ball.multiplier);
+        var points = ball.multiplier * numBallsInPlay;
+
+        if (points >= sufficientlyImpressivePoints) {
+            banners.spawn(Std.string(points), ball.x, ball.y);
+            sufficientlyImpressivePoints = nextHighestPowerOfTwo(points);
+            sufficientlyImpressivePointsLastUpdatedFrame = frame;
+        }
+
+        updateScore(score + points);
 
         ball.incrementMultiplier();
     }
@@ -440,5 +471,14 @@ class Game extends Playfield {
                 lastScoreSubmitFrame = frame;
             }
         }
+    }
+
+    function nextHighestPowerOfTwo(value:Int) {
+        value |= value >> 1;
+        value |= value >> 2;
+        value |= value >> 4;
+        value |= value >> 8;
+        value |= value >> 16;
+        return value + 1;
     }
 }
