@@ -58,6 +58,8 @@ class Game extends Playfield {
     static inline var MIN_SUFFICIENTLY_IMPRESSIVE_POINTS = 4;
     static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 60;
 
+    static inline var SAYING_PROBABILITY = 0.1;
+
     static inline var POP_VOLUME = 0.2;
 
     static inline var YAY_VOLUME = 0.3;
@@ -85,6 +87,7 @@ class Game extends Playfield {
     var banners:Banners;
     var sufficientlyImpressivePoints:Int;
     var sufficientlyImpressivePointsLastUpdatedFrame:Int;
+    var sayings:Sayings;
 
     var title:Text;
     var scoreText:Text;
@@ -182,6 +185,8 @@ class Game extends Playfield {
 
         sufficientlyImpressivePoints = MIN_SUFFICIENTLY_IMPRESSIVE_POINTS;
         sufficientlyImpressivePointsLastUpdatedFrame = 0;
+
+        sayings = new Sayings();
 
         var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
@@ -394,7 +399,8 @@ class Game extends Playfield {
         var points = ball.multiplier * numBallsInPlay;
 
         if (points >= sufficientlyImpressivePoints) {
-            banners.spawn(Std.string(points), ball.x, ball.y);
+            var text = if (Math.random() > SAYING_PROBABILITY) Std.string(points) else sayings.forHitBrick();
+            banners.spawn(text, ball.x, ball.y);
             sufficientlyImpressivePoints = nextHighestPowerOfTwo(points);
             sufficientlyImpressivePointsLastUpdatedFrame = frame;
         }
