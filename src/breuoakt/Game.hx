@@ -281,6 +281,8 @@ class Game extends Playfield {
                 }
 
                 if (ball.y > HEIGHT + Ball.HEIGHT * 0.5) {
+                    banners.onLoseBall(ball.x);
+
                     ball.reset();
 
                     aws[Std.random(aws.length)].play();
@@ -335,6 +337,8 @@ class Game extends Playfield {
         var brickLeft = if (brickIndex % NUM_BRICKS_X > 0) bricks[brickIndex - 1] else null;
         var brickBelow = if (brickIndex < NUM_BRICKS_X * (NUM_BRICKS_Y - 1)) bricks[brickIndex + NUM_BRICKS_X] else null;
 
+        var cool = false;
+
         if (ball.prevX + Ball.WIDTH * 0.5 < brick.x - Brick.WIDTH * 0.5) {
             // Ball is to the left of brick
             if ((brickLeft == null || !brickLeft.prevCollidable) && ball.velocity.x > 0) {
@@ -359,6 +363,7 @@ class Game extends Playfield {
                     i -= NUM_BRICKS_X;
                 }
                 if (i < 0) {
+                    cool = true;
                     var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
                     spawnBall(paddle.x, ballSpawnY);
                     yay.play(0, 0, yaySoundTransform);
@@ -376,7 +381,7 @@ class Game extends Playfield {
         brick.hit();
 
         var points = ball.multiplier * numBallsInPlay;
-        banners.onHitBrick(points, ball.x, ball.y);
+        banners.onHitBrick(points, ball.x, ball.y, cool);
 
         updateScore(score + points);
 

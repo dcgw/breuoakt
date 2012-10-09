@@ -18,29 +18,43 @@ class Banners implements IGraphic {
 
     static inline var MIN_SUFFICIENTLY_IMPRESSIVE_POINTS = 4;
     static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 60;
+    static inline var MIN_HIT_BRICK_BANNER_INTERVAL_FRAMES = 6;
 
-    static inline var SAYING_PROBABILITY = 0.5;
+    static inline var HURT_BRICK_PROBABILITY = 0.5;
 
     public var active:Bool;
     public var visible:Bool;
 
+    var coolStuffSayings:Array<String>;
+    var hurtBrickSayings:Array<String>;
+    var lostBallSayings:Array<String>;
+
     var sufficientlyImpressivePoints:Int;
     var sufficientlyImpressivePointsLastUpdatedFrame:Int;
+    var lastHitBrickBannerFrame:Int;
 
     var frame:Int;
 
     var banners:Array<Text>;
     var nextBanner:Int;
 
-    var sayings:Sayings;
-
     public function new() {
         active = true;
         visible = true;
 
-        var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
+        coolStuffSayings = ["wizard!", "first rate!", "first class!", "my word!",
+                "jolly good!", "well done!", "hurrah!", "superb!", "blimey!", "cor!",
+                "crikey!", "top hole!", "goodness!"];
+
+        hurtBrickSayings = ["ow!", "that hurt!", "you rotter!", "oi!"];
+
+        lostBallSayings = ["chin up", "never mind", "not to worry", "oh no", "bad show",
+                "that must be a bit of a blow for you", "it'll all sort itself out",
+                "time for a nice cup of tea", "perhaps next time"];
 
         frame = 0;
+
+        var fontFace = new FontFace(Assets.getFont("assets/04B_03__.ttf").fontName);
 
         banners = [];
         for (i in 0...MAX_BANNERS) {
@@ -56,29 +70,36 @@ class Banners implements IGraphic {
         }
         nextBanner = 0;
 
-        sayings = new Sayings();
-
         reset();
     }
 
     public function reset() {
         sufficientlyImpressivePoints = MIN_SUFFICIENTLY_IMPRESSIVE_POINTS;
         sufficientlyImpressivePointsLastUpdatedFrame = frame;
+        lastHitBrickBannerFrame = frame;
     }
 
-    public function onHitBrick(points:Int, x:Float, y:Float) {
+    public function onHitBrick(points:Int, x:Float, y:Float, cool:Bool) {
+        if (frame - lastHitBrickBannerFrame < MIN_HIT_BRICK_BANNER_INTERVAL_FRAMES) {
+            return;
+        }
+
         var banner = banners[nextBanner];
 
-        if (points >= sufficientlyImpressivePoints) {
+        if (cool) {
+            banner.text = coolStuffSayings[Std.random(coolStuffSayings.length)];
+            Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: y - 64 - Std.random(64) })
+                    .ease(Linear.easeNone);
+        } else if (points >= sufficientlyImpressivePoints) {
             banner.text = Std.string(points);
             Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
                     .ease(Cubic.easeIn);
 
             sufficientlyImpressivePoints = nextHighestPowerOfTwo(points);
             sufficientlyImpressivePointsLastUpdatedFrame = frame;
-        } else if (Math.random() < SAYING_PROBABILITY) {
-            banner.text = sayings.forHitBrick();
-            Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: -24 })
+        } else if (Math.random() < HURT_BRICK_PROBABILITY) {
+            banner.text = hurtBrickSayings[Std.random(hurtBrickSayings.length)];
+            Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: y - 64 - Std.random(64) })
                     .ease(Linear.easeNone);
         } else {
             return;
@@ -89,6 +110,24 @@ class Banners implements IGraphic {
         banner.x = x;
         banner.y = y;
         banner.alpha = 0.8;
+
+        nextBanner = (nextBanner + 1) % MAX_BANNERS;
+
+        lastHitBrickBannerFrame = frame;
+    }
+
+    public function onLoseBall(x:Float) {
+        var banner = banners[nextBanner];
+
+        banner.text = lostBallSayings[Std.random(lostBallSayings.length)];
+        banner.centerOrigin();
+        banner.scale = 1;
+        banner.x = x;
+        banner.y = Game.HEIGHT - 12;
+        banner.alpha = 0.8;
+
+        Actuate.tween(banner, 1.5, { scale: 1.4, alpha: 0, y: Game.HEIGHT-48 })
+                .ease(Linear.easeNone);
 
         nextBanner = (nextBanner + 1) % MAX_BANNERS;
     }
