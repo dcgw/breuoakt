@@ -50,8 +50,8 @@ class Banners implements IGraphic {
 
         lostBallSayings = ["chin up", "never mind", "not to worry", "oh no", "bad show",
                 "that must be a bit of a blow for you", "it'll all sort itself out",
-                "time for a nice cup of tea", "perhaps next time", "it's all gone wrong",
-                "dash it all", "oh dear", "that's a shame"];
+                "time for a nice cup of tea", "perhaps next time", "that's a shame",
+                "these things happen"];
 
         frame = 0;
 
