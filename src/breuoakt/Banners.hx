@@ -44,7 +44,7 @@ class Banners implements IGraphic {
 
         coolStuffSayings = ["wizard!", "first rate!", "first class!", "my word!",
                 "jolly good!", "well done!", "hurrah!", "superb!", "blimey!", "cor!",
-                "crikey!", "top hole!", "goodness!", "spiffing", "i say!"];
+                "crikey!", "top hole!", "goodness!", "spiffing", "i say!", "tremendous!"];
 
         hurtBrickSayings = ["ow!", "that hurt!", "you rotter!", "oi!"];
 
