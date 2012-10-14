@@ -88,7 +88,7 @@ class Banners implements IGraphic {
         var banner = banners[nextBanner];
 
         if (points >= sufficientlyImpressivePoints) {
-            banner.text = Std.string(points);
+            banner.text = Std.string(nextSmallestSignificantNumber(points));
             Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
             .ease(Cubic.easeIn);
 
@@ -171,5 +171,10 @@ class Banners implements IGraphic {
         value |= value >> 8;
         value |= value >> 16;
         return value + 1;
+    }
+
+    function nextSmallestSignificantNumber(value:Int) {
+        var digits = Std.string(value);
+        return Std.parseInt(StringTools.rpad(digits.charAt(0), "0", digits.length));
     }
 }
