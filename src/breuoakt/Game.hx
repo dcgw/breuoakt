@@ -344,7 +344,7 @@ class Game extends Playfield {
 
         var points = 0;
         for (i in 0...brickCount) {
-            points += ball.multiplier * (1 << numBallsInPlay);
+            points += ball.multiplier * (1 << (numBallsInPlay - 1));
             ball.incrementMultiplier();
         }
 
