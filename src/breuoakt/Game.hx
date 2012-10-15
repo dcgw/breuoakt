@@ -24,6 +24,7 @@ import hopscotch.input.digital.Button;
 import flash.Lib;
 import hopscotch.Playfield;
 import hopscotch.engine.Engine;
+import motion.easing.Sine;
 
 class Game extends Playfield {
     public static inline var WIDTH = 640;
@@ -57,7 +58,7 @@ class Game extends Playfield {
     static inline var MIN_BIP_INTERVAL_FRAMES = 6;
 
     static inline var MIN_BIP_VELOCITY_CHANGE = 2;
-    static inline var MAX_BIP_VELOCITY_CHANGE = 32;
+    static inline var MAX_BIP_VELOCITY_CHANGE = 8;
 
     static inline var POP_VOLUME = 0.2;
 
@@ -79,7 +80,6 @@ class Game extends Playfield {
 
     var numBallsInPlay:Int;
     var balls:Array<Ball>;
-    var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
 
@@ -164,8 +164,6 @@ class Game extends Playfield {
             addEntity(ball);
         }
         numBallsInPlay = 0;
-
-        prevBallVelocity = new Point();
 
         bricks = [];
         for (y in 0...NUM_BRICKS_Y) {
@@ -354,9 +352,6 @@ class Game extends Playfield {
     }
 
     function collideWithPaddle (paddle:Paddle, ball:Ball) {
-        prevBallVelocity.x = ball.velocity.x;
-        prevBallVelocity.y = ball.velocity.y;
-
         var prevBallVelocityX = ball.velocity.x;
         var prevBallVelocityY = ball.velocity.y;
 
@@ -381,18 +376,20 @@ class Game extends Playfield {
         ball.velocity.x += HITTINESS * (paddle.velocity.x - prevBallVelocityX);
         ball.velocity.y += HITTINESS * (paddle.velocity.y - prevBallVelocityY);
 
-        VectorMath.subtract(prevBallVelocity, ball.velocity);
-        var volume = VectorMath.magnitude(prevBallVelocity);
-        volume = (volume - MIN_BIP_VELOCITY_CHANGE) * (MAX_BIP_VELOCITY_CHANGE - MIN_BIP_VELOCITY_CHANGE);
+        Static.point.x = prevBallVelocityX - ball.velocity.x;
+        Static.point.y = prevBallVelocityY - ball.velocity.y;
+        var velocityChange = VectorMath.magnitude(Static.point);
+        var volume = (velocityChange - MIN_BIP_VELOCITY_CHANGE) / (MAX_BIP_VELOCITY_CHANGE - MIN_BIP_VELOCITY_CHANGE);
         volume = Range.clampFloat(volume, 0, 1);
+        volume = Sine.easeOut.calculate(volume);
         volume *= BIP_VOLUME;
 
         if (volume > 0) {
             if (bipSoundChannel != null
                     && lastBipFrame + MIN_BIP_INTERVAL_FRAMES > frame) {
                 if (volume > bipSoundChannel.soundTransform.volume) {
-                    bipSoundChannel.soundTransform.volume = volume;
-                    bipSoundChannel.soundTransform = bipSoundChannel.soundTransform;
+                    bipSoundTransform.volume = volume;
+                    bipSoundChannel.soundTransform = bipSoundTransform;
                 }
             } else {
                 bipSoundTransform.volume = volume;
