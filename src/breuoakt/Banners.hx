@@ -46,7 +46,7 @@ class Banners implements IGraphic {
                 "jolly good!", "well done!", "hurrah!", "superb!", "blimey!", "cor!",
                 "crikey!", "top hole!", "goodness!", "spiffing", "i say!", "tremendous!"];
 
-        hurtBrickSayings = ["ow!", "that hurt!", "you rotter!", "oi!"];
+        hurtBrickSayings = ["ow!", "that hurt!", "you rotter!", "oi!", "steady on!"];
 
         lostBallSayings = ["chin up", "never mind", "not to worry", "oh no", "bad show",
                 "that must be a bit of a blow for you", "it'll all sort itself out",
