@@ -11,7 +11,7 @@ import hopscotch.graphics.FontFace;
 import flash.text.TextFormatAlign;
 import hopscotch.graphics.Text;
 import flash.media.Sound;
-import nme.installer.Assets;
+import openfl.Assets;
 import hopscotch.input.analogue.Mouse;
 import hopscotch.input.analogue.IPointer;
 import haxe.PosInfos;

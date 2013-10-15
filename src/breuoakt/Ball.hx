@@ -1,7 +1,7 @@
 package breuoakt;
 
-import com.eclecticdesignstudio.motion.easing.Linear;
-import com.eclecticdesignstudio.motion.Actuate;
+import motion.easing.Linear;
+import motion.Actuate;
 import hopscotch.collision.BoxMask;
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;

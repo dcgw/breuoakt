@@ -1,10 +1,10 @@
 package breuoakt;
 
-import com.eclecticdesignstudio.motion.easing.Linear;
-import com.eclecticdesignstudio.motion.easing.Cubic;
+import motion.easing.Linear;
+import motion.easing.Cubic;
 import flash.text.TextFormatAlign;
-import nme.installer.Assets;
-import com.eclecticdesignstudio.motion.Actuate;
+import openfl.Assets;
+import motion.Actuate;
 import hopscotch.graphics.FontFace;
 import flash.geom.Matrix;
 import flash.geom.Point;
