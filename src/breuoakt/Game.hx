@@ -42,7 +42,7 @@ class Game extends Playfield {
     static inline var BRICK_SPACING_X = 6;
     static inline var BRICK_SPACING_Y = 4;
 
-    static inline var SPRINGINESS = 0.2;
+    static inline var SPRINGINESS = 0.5;
     static inline var HITTINESS = 0.5;
 
     static inline var MUSIC_VOLUME = 0.2;
@@ -425,7 +425,7 @@ class Game extends Playfield {
                 ball.velocity.y += HITTINESS * (paddle.velocity.y - ball.velocity.y);
             }
         } else {
-            ball.velocity.y += HITTINESS & paddle.velocity.y;
+            ball.velocity.y += HITTINESS * paddle.velocity.y;
         }
 
         VectorMath.subtract(prevBallVelocity, ball.velocity);
