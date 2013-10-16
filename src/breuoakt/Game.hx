@@ -439,6 +439,7 @@ class Game extends Playfield {
                     && lastBipFrame + MIN_BIP_INTERVAL_FRAMES > frame) {
                 if (volume > bipSoundChannel.soundTransform.volume) {
                     bipSoundChannel.soundTransform.volume = volume;
+                    bipSoundChannel.soundTransform = bipSoundChannel.soundTransform;
                 }
             } else {
                 bipSoundTransform.volume = volume;
