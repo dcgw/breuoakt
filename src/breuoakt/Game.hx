@@ -392,9 +392,6 @@ class Game extends Playfield {
         prevBallVelocity.x = ball.velocity.x;
         prevBallVelocity.y = ball.velocity.y;
 
-        var prevBallVelocityX = ball.velocity.x;
-        var prevBallVelocityY = ball.velocity.y;
-
         if (ball.prevY > paddle.prevY) {
             var collideY = paddle.y + (Ball.HEIGHT + Paddle.HEIGHT) * 0.5 + 1;
             if (ball.y < collideY) {
@@ -413,8 +410,23 @@ class Game extends Playfield {
             }
         }
 
-        ball.velocity.x += HITTINESS * (paddle.velocity.x - prevBallVelocityX);
-        ball.velocity.y += HITTINESS * (paddle.velocity.y - prevBallVelocityY);
+        if ((paddle.velocity.x <= 0 && ball.velocity.x <= 0)
+                || (paddle.velocity.x >= 0 && ball.velocity.x >= 0)) {
+            if (Math.abs(paddle.velocity.x) > Math.abs(ball.velocity.x)) {
+                ball.velocity.x += HITTINESS * (paddle.velocity.x - ball.velocity.x);
+            }
+        } else {
+            ball.velocity.x += HITTINESS * paddle.velocity.x;
+        }
+
+        if ((paddle.velocity.y <= 0 && ball.velocity.y <= 0)
+                || (paddle.velocity.y >= 0 && ball.velocity.y >= 0)) {
+            if (Math.abs(paddle.velocity.y) > Math.abs(ball.velocity.y)) {
+                ball.velocity.y += HITTINESS * (paddle.velocity.y - ball.velocity.y);
+            }
+        } else {
+            ball.velocity.y += HITTINESS & paddle.velocity.y;
+        }
 
         VectorMath.subtract(prevBallVelocity, ball.velocity);
         var volume = VectorMath.magnitude(prevBallVelocity);
