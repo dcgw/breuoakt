@@ -1,5 +1,9 @@
 package breuoakt;
 
+#if flash
+import haxe.PosInfos;
+#end
+
 import flash.media.SoundChannel;
 import hopscotch.math.VectorMath;
 import flash.geom.Point;
