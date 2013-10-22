@@ -1,6 +1,7 @@
 package breuoakt;
 
 #if flash
+import hopscotch.Static;
 import haxe.PosInfos;
 #end
 
@@ -333,6 +334,9 @@ class Game extends Playfield {
     }
 
     function collideWithBrick(brickIndex:Int, ball:Ball) {
+        prevBallVelocity.x = ball.velocity.x;
+        prevBallVelocity.y = ball.velocity.y;
+
         var brick = bricks[brickIndex];
 
         var brickAbove = if (brickIndex >= NUM_BRICKS_X) bricks[brickIndex - NUM_BRICKS_X] else null;
@@ -381,7 +385,10 @@ class Game extends Playfield {
         }
 
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
-        brick.hit();
+
+        Static.point.x = ball.x;
+        Static.point.y = ball.y;
+        brick.hit(Static.point, prevBallVelocity);
 
         var points = ball.multiplier * numBallsInPlay;
         banners.onHitBrick(points, ball.x, ball.y, cool);
