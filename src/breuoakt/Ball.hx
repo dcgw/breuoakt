@@ -2,7 +2,6 @@ package breuoakt;
 
 import motion.easing.Linear;
 import motion.Actuate;
-import hopscotch.collision.BoxMask;
 import hopscotch.graphics.Image;
 import flash.display.BitmapData;
 import flash.geom.Point;

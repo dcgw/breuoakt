@@ -14,7 +14,6 @@ import flash.media.Sound;
 import openfl.Assets;
 import hopscotch.input.analogue.Mouse;
 import hopscotch.input.analogue.IPointer;
-import haxe.PosInfos;
 import hopscotch.input.digital.MouseButton;
 import hopscotch.input.digital.Button;
 import flash.Lib;
