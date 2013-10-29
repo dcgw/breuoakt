@@ -63,10 +63,6 @@ class BrickCollider {
                 brickIndex = collidedBrickIndices[i];
                 var brick = bricks[brickIndex];
 
-                Static.point.x = ball.x;
-                Static.point.y = ball.y;
-                brick.hit(Static.point, ball.velocity);
-
                 if (brick.x + Brick.WIDTH * 0.5 - sizeTolerance < ball.x - Ball.WIDTH * 0.5) {
                     brickLeftIndex = brickIndex;
                 } else if (brick.x - Brick.WIDTH * 0.5 + sizeTolerance > ball.x + Ball.WIDTH * 0.5) {
@@ -81,6 +77,14 @@ class BrickCollider {
             }
 
             sizeTolerance += SIZE_TOLERANCE_INCREMENT;
+        }
+
+        for (i in 0...numCollidedBricks) {
+            var brick = bricks[collidedBrickIndices[i]];
+
+            Static.point.x = ball.x;
+            Static.point.y = ball.y;
+            brick.hit(Static.point, ball.velocity);
         }
 
         var hitTop = false;
