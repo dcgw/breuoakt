@@ -28,7 +28,7 @@ import hopscotch.engine.Engine;
 class Game extends Playfield {
     public static inline var WIDTH = 640;
     public static inline var HEIGHT = 480;
-    public static inline var LOGIC_RATE = 60;
+    public static inline var LOGIC_RATE = 120;
 
     static inline var MAX_BALLS_IN_PLAY = 32;
 

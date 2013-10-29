@@ -17,8 +17,8 @@ class Banners implements IGraphic {
     static inline var MAX_BANNERS = 32;
 
     static inline var MIN_SUFFICIENTLY_IMPRESSIVE_POINTS = 4;
-    static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 60;
-    static inline var MIN_HIT_BRICK_BANNER_INTERVAL_FRAMES = 6;
+    static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 1 * Game.LOGIC_RATE;
+    static inline var MIN_HIT_BRICK_BANNER_INTERVAL_FRAMES = 0.1 * Game.LOGIC_RATE;
 
     static inline var HURT_BRICK_PROBABILITY = 0.5;
 

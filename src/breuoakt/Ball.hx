@@ -14,7 +14,7 @@ class Ball extends Entity {
     public static inline var START_X = Game.WIDTH * 0.5;
     public static inline var START_Y = Game.HEIGHT * 0.6;
 
-    static inline var GRAVITY = 0.1;
+    static inline var GRAVITY = 360 / Game.LOGIC_RATE / Game.LOGIC_RATE;
 
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;

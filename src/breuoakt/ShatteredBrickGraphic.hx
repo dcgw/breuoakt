@@ -15,7 +15,7 @@ import flash.display.BitmapData;
 import hopscotch.graphics.Graphic;
 
 class ShatteredBrickGraphic extends Graphic {
-    private static inline var GRAVITY = 0.2;
+    private static inline var GRAVITY = 720 / Game.LOGIC_RATE / Game.LOGIC_RATE;
 
     private var displayObjectContainer:DisplayObjectContainer;
     private var rectangle:Sprite;
