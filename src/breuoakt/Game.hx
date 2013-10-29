@@ -40,7 +40,7 @@ class Game extends Playfield {
     static inline var TOP_BRICK_Y = 64;
     static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
 
-    static inline var NUM_BRICKS_X = 15;
+    public static inline var NUM_BRICKS_X = 15;
     static inline var NUM_BRICKS_Y = 8;
 
     static inline var BRICK_SPACING_X = 6;
@@ -82,6 +82,8 @@ class Game extends Playfield {
     var prevBallVelocity:Point;
 
     var bricks:Array<Brick>;
+
+    var brickCollider:BrickCollider;
 
     var banners:Banners;
 
@@ -176,6 +178,8 @@ class Game extends Playfield {
             }
         }
 
+        brickCollider = new BrickCollider(bricks, onHit);
+
         banners = new Banners();
         addGraphic(banners);
 
@@ -258,12 +262,7 @@ class Game extends Playfield {
 
         for (ball in balls) {
             if (ball.active) {
-                for (i in 0...bricks.length) {
-                    var brick = bricks[i];
-                    if (brick.collidable && brick.collideEntity(ball)) {
-                        collideWithBrick(i, ball);
-                    }
-                }
+                brickCollider.collide(ball);
 
                 if (ball.x - Ball.WIDTH * 0.5 < Wall.WIDTH) {
                     ball.x = Wall.WIDTH - ball.x + Wall.WIDTH + Ball.WIDTH;
@@ -333,69 +332,25 @@ class Game extends Playfield {
         ++numBallsInPlay;
     }
 
-    function collideWithBrick(brickIndex:Int, ball:Ball) {
-        prevBallVelocity.x = ball.velocity.x;
-        prevBallVelocity.y = ball.velocity.y;
-
-        var brick = bricks[brickIndex];
-
-        var brickAbove = if (brickIndex >= NUM_BRICKS_X) bricks[brickIndex - NUM_BRICKS_X] else null;
-        var brickRight = if (brickIndex % NUM_BRICKS_X < NUM_BRICKS_X - 1) bricks[brickIndex + 1] else null;
-        var brickLeft = if (brickIndex % NUM_BRICKS_X > 0) bricks[brickIndex - 1] else null;
-        var brickBelow = if (brickIndex < NUM_BRICKS_X * (NUM_BRICKS_Y - 1)) bricks[brickIndex + NUM_BRICKS_X] else null;
-
-        var cool = false;
-
-        if (ball.prevX + Ball.WIDTH * 0.5 < brick.x - Brick.WIDTH * 0.5) {
-            // Ball is to the left of brick
-            if ((brickLeft == null || !brickLeft.prevCollidable) && ball.velocity.x > 0) {
-                ball.velocity.x = -ball.velocity.x;
-            }
-        } else if (ball.prevX - Ball.WIDTH * 0.5 > brick.x + Brick.WIDTH * 0.5) {
-            // Ball is to the right of brick
-            if ((brickRight == null || !brickRight.prevCollidable) && ball.velocity.x < 0) {
-                ball.velocity.x = -ball.velocity.x;
-            }
-        }
-
-        if (ball.prevY + Ball.HEIGHT * 0.5 < brick.y - Brick.HEIGHT * 0.5) {
-            // Ball is above brick
-            if ((brickAbove == null || !brickAbove.prevCollidable) && ball.velocity.y > 0) {
-                ball.velocity.y = -ball.velocity.y;
-            }
-
-            if (ball.yayPrimed) {
-                var i = brickIndex - NUM_BRICKS_X;
-                while (i >= 0 && !bricks[i].prevCollidable) {
-                    i -= NUM_BRICKS_X;
-                }
-                if (i < 0) {
-                    cool = true;
-                    var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
-                    spawnBall(paddle.x, ballSpawnY);
-                    yay.play(0, 0, yaySoundTransform);
-                    ball.yayPrimed = false;
-                }
-            }
-        } else if (ball.prevY - Ball.HEIGHT * 0.5 > brick.y + Brick.HEIGHT * 0.5) {
-            // Ball is below brick
-            if ((brickBelow == null || !brickBelow.prevCollidable) && ball.velocity.y < 0) {
-                ball.velocity.y = -ball.velocity.y;
-            }
+    function onHit(ball:Ball, brickCount:Int, hitTop:Bool) {
+        if (hitTop && ball.yayPrimed) {
+            var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
+            spawnBall(paddle.x, ballSpawnY);
+            yay.play(0, 0, yaySoundTransform);
+            ball.yayPrimed = false;
         }
 
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
 
-        Static.point.x = ball.x;
-        Static.point.y = ball.y;
-        brick.hit(Static.point, prevBallVelocity);
+        var points = 0;
+        for (i in 0...brickCount) {
+            points += ball.multiplier * numBallsInPlay;
+            ball.incrementMultiplier();
+        }
 
-        var points = ball.multiplier * numBallsInPlay;
-        banners.onHitBrick(points, ball.x, ball.y, cool);
+        banners.onHitBrick(points, ball.x, ball.y, hitTop);
 
         updateScore(score + points);
-
-        ball.incrementMultiplier();
     }
 
     function collideWithPaddle (paddle:Paddle, ball:Ball) {

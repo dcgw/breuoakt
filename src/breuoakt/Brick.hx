@@ -23,7 +23,6 @@ class Brick extends Entity {
     static var colors = [0x99dd92, 0x94c4d3, 0x949ace, 0xcc96b1];
 
     public var collidable(default, null):Bool;
-    public var prevCollidable(default, null):Bool;
 
     var colorIndex:Int;
 
@@ -62,7 +61,6 @@ class Brick extends Entity {
         collisionMask = new BoxMask(-WIDTH * 0.5, -HEIGHT * 0.5, WIDTH, HEIGHT);
 
         collidable = true;
-        prevCollidable = true;
 
         tmpBallPosition = new Point();
         tmpBallVelocity = new Point();
@@ -71,7 +69,6 @@ class Brick extends Entity {
     public function reset() {
         respawn();
 
-        prevCollidable = true;
         collidable = true;
     }
 
@@ -122,13 +119,10 @@ class Brick extends Entity {
                 spawnProbability += SPAWN_PROBABILITY_INCREASE_PER_FRAME;
             }
         }
-
-        prevCollidable = collidable;
     }
 
     function respawn() {
         if (!collidable) {
-            prevCollidable = false;
             collidable = false;
             visible = true;
 
@@ -144,7 +138,6 @@ class Brick extends Entity {
                         Actuate.timer(0.2)
                                 .onComplete(function() {
                                     collidable = true;
-                                    prevCollidable = true;
                                 });
                     });
 

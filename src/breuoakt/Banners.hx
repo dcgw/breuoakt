@@ -79,24 +79,24 @@ class Banners implements IGraphic {
         lastHitBrickBannerFrame = frame;
     }
 
-    public function onHitBrick(points:Int, x:Float, y:Float, cool:Bool) {
+    public function onHitBrick(points:Int, x:Float, y:Float, hitTop:Bool) {
         if (frame - lastHitBrickBannerFrame < MIN_HIT_BRICK_BANNER_INTERVAL_FRAMES) {
             return;
         }
 
         var banner = banners[nextBanner];
 
-        if (cool) {
-            banner.text = coolStuffSayings[Std.random(coolStuffSayings.length)];
-            Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: y - 64 - Std.random(64) })
-                    .ease(Linear.easeNone);
-        } else if (points >= sufficientlyImpressivePoints) {
+        if (points >= sufficientlyImpressivePoints) {
             banner.text = Std.string(points);
             Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
-                    .ease(Cubic.easeIn);
+            .ease(Cubic.easeIn);
 
             sufficientlyImpressivePoints = nextHighestPowerOfTwo(points);
             sufficientlyImpressivePointsLastUpdatedFrame = frame;
+        } else if (hitTop) {
+            banner.text = coolStuffSayings[Std.random(coolStuffSayings.length)];
+            Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: y - 64 - Std.random(64) })
+                    .ease(Linear.easeNone);
         } else if (Math.random() < HURT_BRICK_PROBABILITY) {
             banner.text = hurtBrickSayings[Std.random(hurtBrickSayings.length)];
             Actuate.tween(banner, 3, { scale: 8, alpha: 0, y: y - 64 - Std.random(64) })
