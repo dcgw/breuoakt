@@ -1,5 +1,9 @@
 package breuoakt;
 
+import motion.easing.Cubic;
+import motion.easing.Linear;
+import motion.Actuate;
+import motion.Actuate;
 import flash.display.DisplayObjectContainer;
 import breuoakt.Game;
 import breuoakt.Game;
@@ -16,6 +20,8 @@ import hopscotch.graphics.Graphic;
 
 class ShatteredBrickGraphic extends Graphic {
     private static inline var GRAVITY = 720 / Game.LOGIC_RATE / Game.LOGIC_RATE;
+
+    private static inline var FADE_TIME_SECONDS = 0.5;
 
     private var displayObjectContainer:DisplayObjectContainer;
     private var rectangle:Sprite;
@@ -86,6 +92,10 @@ class ShatteredBrickGraphic extends Graphic {
         this.position.y = 0;
         this.velocity.x = velocity.x;
         this.velocity.y = velocity.y;
+
+        colorTransform.alphaMultiplier = 1;
+        Actuate.tween(colorTransform, FADE_TIME_SECONDS, { alphaMultiplier: 0 })
+                .ease(Cubic.easeIn);
     }
 
     override public function updateGraphic(frame:Int, screenSize:ScreenSize) {
