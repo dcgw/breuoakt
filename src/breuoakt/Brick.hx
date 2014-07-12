@@ -40,6 +40,8 @@ class Brick extends Entity {
     var tmpBallPosition:Point;
     var tmpBallVelocity:Point;
 
+    var spawnActuateTarget = {};
+
     public function new() {
         super();
 
@@ -69,9 +71,9 @@ class Brick extends Entity {
     }
 
     public function reset() {
-        respawn();
+        Actuate.stop(spawnActuateTarget, null, false, false);
 
-        collidable = true;
+        respawn(true);
     }
 
     public function hit(ballPosition:Point, ballVelocity:Point) {
@@ -126,24 +128,26 @@ class Brick extends Entity {
         }
     }
 
-    function respawn() {
+    function respawn(collidableImmediately = false) {
         if (!collidable) {
-            collidable = false;
-            visible = true;
+            collidable = collidableImmediately;
 
             var image = nextColor();
 
             image.scale = 0;
             image.y = -16 - Math.random() * 32;
             image.angle = (Math.random() - 0.5) * Math.PI / 4;
-            Actuate.timer(Math.random() * 1)
+
+            Actuate.tween(spawnActuateTarget, Math.random() * 1, {})
                     .onComplete(function() {
                         Actuate.tween(image, 2, {scale:1, y:0, angle:0})
                                 .ease(Elastic.easeOut);
-                        Actuate.timer(0.2)
-                                .onComplete(function() {
-                                    collidable = true;
-                                });
+                        if (!collidableImmediately) {
+                            Actuate.tween(spawnActuateTarget, 0.2, {})
+                                    .onComplete(function() {
+                                        collidable = true;
+                                    });
+                        }
                     });
 
             hitFrame = 0;
