@@ -88,7 +88,7 @@ class Banners implements IGraphic {
             return;
         }
 
-        var banner = banners[nextBanner];
+        var banner = getNextBanner();
 
         if (points >= sufficientlyImpressivePoints) {
             banner.text = Std.string(nextSmallestSignificantNumber(points));
@@ -115,13 +115,11 @@ class Banners implements IGraphic {
         banner.y = y;
         banner.alpha = 0.8;
 
-        nextBanner = (nextBanner + 1) % MAX_BANNERS;
-
         lastHitBrickBannerFrame = frame;
     }
 
     public function onLoseBall(x:Float) {
-        var banner = banners[nextBanner];
+        var banner = getNextBanner();
 
         banner.text = lostBallSayings[Std.random(lostBallSayings.length)];
         banner.centerOrigin();
@@ -132,12 +130,10 @@ class Banners implements IGraphic {
 
         Actuate.tween(banner, 1.5, { scale: 1.4, alpha: 0, y: Game.HEIGHT-48 })
                 .ease(Linear.easeNone);
-
-        nextBanner = (nextBanner + 1) % MAX_BANNERS;
     }
 
     public function onNewBall() {
-        var banner = banners[nextBanner];
+        var banner = getNextBanner();
 
         banner.text = newBallSayings[Std.random(newBallSayings.length)];
         banner.centerOrigin();
@@ -148,8 +144,6 @@ class Banners implements IGraphic {
 
         Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
                 .ease(Cubic.easeIn);
-
-        nextBanner = (nextBanner + 1) % MAX_BANNERS;
     }
 
     public function beginGraphic(frame:Int) {
@@ -181,6 +175,12 @@ class Banners implements IGraphic {
         for (banner in banners) {
             banner.render(target, position, camera);
         }
+    }
+
+    function getNextBanner():Text {
+        var banner = banners[nextBanner];
+        nextBanner = (nextBanner + 1) % MAX_BANNERS;
+        return banner;
     }
 
     function nextHighestPowerOfTwo(value:Int) {
