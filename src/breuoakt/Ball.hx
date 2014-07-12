@@ -17,7 +17,7 @@ class Ball extends Entity {
 
     static inline var GRAVITY = 360 / Game.LOGIC_RATE / Game.LOGIC_RATE;
 
-    static inline var MAX_SPEED = Brick.HEIGHT * 0.5 - 1;
+    public static inline var MAX_SPEED = Brick.HEIGHT * 0.5 - 1;
 
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;

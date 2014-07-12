@@ -152,6 +152,22 @@ class Banners implements IGraphic {
         nextBanner = (nextBanner + 1) % MAX_BANNERS;
     }
 
+    public function onBallEmergency() {
+        var banner = banners[nextBanner];
+
+        banner.text = "ball emergency";
+        banner.centerOrigin();
+        banner.scale = 1;
+        banner.x = Game.WIDTH * 0.5;
+        banner.y = Game.HEIGHT * 0.5;
+        banner.alpha = 0.8;
+
+        Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
+                .ease(Cubic.easeIn);
+
+        nextBanner = (nextBanner + 1) % MAX_BANNERS;
+    }
+
     public function beginGraphic(frame:Int) {
         this.frame = frame;
 

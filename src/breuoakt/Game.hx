@@ -105,6 +105,9 @@ class Game extends Playfield {
     var yay:Sound;
     var yaySoundTransform:SoundTransform;
 
+    var ballEmergencyPrimed:Bool;
+    var ballEmergencyUsed:Bool;
+
     static function main () {
         #if flash
         haxe.Log.trace = function(v:Dynamic, ?pos:PosInfos) {
@@ -290,6 +293,10 @@ class Game extends Playfield {
 
                     if (--numBallsInPlay == 0) {
                         checkSubmitHighscore(true);
+                    } else if (numBallsInPlay == 1 && !ballEmergencyUsed) {
+                        ballEmergencyPrimed = true;
+                    } else {
+                        ballEmergencyPrimed = false;
                     }
                 }
 
@@ -312,9 +319,12 @@ class Game extends Playfield {
         }
 
         banners.reset();
+
+        ballEmergencyPrimed = false;
+        ballEmergencyUsed = false;
     }
 
-    function spawnBall(x:Float, y:Float) {
+    function spawnBall(x:Float, y:Float, vx:Float=0, vy:Float=0) {
         if (numBallsInPlay >= MAX_BALLS_IN_PLAY) {
             return;
         }
@@ -327,17 +337,35 @@ class Game extends Playfield {
         }
 
         ball.spawn(x, y);
+
+        ball.velocity.x = vx;
+        ball.velocity.y = vy;
+
         ++numBallsInPlay;
     }
 
     function onHit(ball:Ball, brickCount:Int, hitTop:Bool) {
-        if (hitTop && ball.yayPrimed) {
-            var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
-            spawnBall(paddle.x, ballSpawnY);
-            yay.play(0, 0, yaySoundTransform);
-            ball.yayPrimed = false;
+        if (hitTop) {
+            if (ball.yayPrimed) {
+                var ballSpawnY = Math.max(paddle.y - BALL_SPAWN_DISTANCE_FROM_PADDLE, BALL_SPAWN_MIN_Y);
+                spawnBall(paddle.x, ballSpawnY);
+                yay.play(0, 0, yaySoundTransform);
+                ball.yayPrimed = false;
 
-            banners.onNewBall();
+                banners.onNewBall();
+            } else if (ballEmergencyPrimed) {
+                for (i in 0...NUM_BRICKS_X) {
+                    var x = LEFT_BRICK_X + i * (Brick.WIDTH + BRICK_SPACING_X);
+
+                    VectorMath.toPolar(Static.point, (Math.random() - 0.5) * 0.25 * Math.PI, Ball.MAX_SPEED);
+                    spawnBall(x, Game.HEIGHT + Ball.HEIGHT, Static.point.x, Static.point.y);
+                }
+
+                ballEmergencyPrimed = false;
+                ballEmergencyUsed = true;
+
+                banners.onBallEmergency();
+            }
         }
 
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);
@@ -402,6 +430,7 @@ class Game extends Playfield {
         }
 
         ball.yayPrimed = true;
+        ballEmergencyPrimed = false;
 
         ball.resetMultiplier();
     }
