@@ -336,6 +336,8 @@ class Game extends Playfield {
             spawnBall(paddle.x, ballSpawnY);
             yay.play(0, 0, yaySoundTransform);
             ball.yayPrimed = false;
+
+            banners.onNewBall();
         }
 
         pops[Std.random(pops.length)].play(0, 0, popSoundTransform);

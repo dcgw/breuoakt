@@ -28,6 +28,7 @@ class Banners implements IGraphic {
     var coolStuffSayings:Array<String>;
     var hurtBrickSayings:Array<String>;
     var lostBallSayings:Array<String>;
+    var newBallSayings:Array<String>;
 
     var sufficientlyImpressivePoints:Int;
     var sufficientlyImpressivePointsLastUpdatedFrame:Int;
@@ -52,6 +53,8 @@ class Banners implements IGraphic {
                 "that must be a bit of a blow for you", "it'll all sort itself out",
                 "time for a nice cup of tea", "perhaps next time", "that's a shame",
                 "these things happen"];
+
+        newBallSayings = ["new ball", "multiball"];
 
         frame = 0;
 
@@ -90,7 +93,7 @@ class Banners implements IGraphic {
         if (points >= sufficientlyImpressivePoints) {
             banner.text = Std.string(nextSmallestSignificantNumber(points));
             Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
-            .ease(Cubic.easeIn);
+                    .ease(Cubic.easeIn);
 
             sufficientlyImpressivePoints = nextHighestPowerOfTwo(points);
             sufficientlyImpressivePointsLastUpdatedFrame = frame;
@@ -129,6 +132,22 @@ class Banners implements IGraphic {
 
         Actuate.tween(banner, 1.5, { scale: 1.4, alpha: 0, y: Game.HEIGHT-48 })
                 .ease(Linear.easeNone);
+
+        nextBanner = (nextBanner + 1) % MAX_BANNERS;
+    }
+
+    public function onNewBall() {
+        var banner = banners[nextBanner];
+
+        banner.text = newBallSayings[Std.random(newBallSayings.length)];
+        banner.centerOrigin();
+        banner.scale = 1;
+        banner.x = Game.WIDTH * 0.5;
+        banner.y = Game.HEIGHT * 0.5;
+        banner.alpha = 0.8;
+
+        Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
+                .ease(Cubic.easeIn);
 
         nextBanner = (nextBanner + 1) % MAX_BANNERS;
     }
