@@ -1,6 +1,5 @@
 package breuoakt;
 
-import flash.Lib;
 import hopscotch.collision.BoxMask;
 import flash.display.Sprite;
 import hopscotch.collision.Mask;
@@ -13,7 +12,7 @@ class MovingBoxMask extends Mask {
     public function new () {
         super();
 
-        collisionContainer = Lib.current;
+        collisionContainer = new Sprite();
         movingBox = new Sprite();
         box = new Sprite();
 

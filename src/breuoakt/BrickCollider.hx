@@ -26,9 +26,6 @@ class BrickCollider {
 
     private var point:Point;
 
-    private var debug:Sprite;
-    private var debugTextField:TextField;
-
     public function new(bricks:Array<Brick>, onHit:Ball -> Int -> Bool -> Void) {
         this.bricks = bricks;
         this.onHit = onHit;
@@ -57,23 +54,6 @@ class BrickCollider {
     }
 
     public function collide(ball:Ball): Void {
-        if (debug == null) {
-            debug = new Sprite();
-            Lib.current.addChild(debug);
-
-            debugTextField = new TextField();
-            debugTextField.x = 20;
-            debugTextField.y = 400;
-            debugTextField.width = 600;
-            debugTextField.textColor = 0xffffffff;
-            debugTextField.wordWrap = true;
-            Lib.current.addChild(debugTextField);
-
-            debugTextField.text = "" + ballBelowMaxAngle + " " + ballLeftMinAngle + " " + ballLeftMaxAngle
-                    + " " + ballAboveMinAngle + " " + ballAboveMaxAngle + " " + ballRightMinAngle + " "
-                    + ballBelowMinAngle;
-        }
-
         var middleBrickColumn = Math.floor((ball.x - Game.LEFT_BRICK_X + Brick.WIDTH * 0.5 + Game.BRICK_SPACING_X * 0.5)
                 / (Brick.WIDTH + Game.BRICK_SPACING_X));
         var middleBrickRow = Math.floor((ball.y - Game.TOP_BRICK_Y + Brick.HEIGHT * 0.5 + Game.BRICK_SPACING_Y * 0.5)
@@ -88,36 +68,6 @@ class BrickCollider {
 
         var middleBrickX = middleBrickLeft + Brick.WIDTH * 0.5;
         var middleBrickY = middleBrickTop + Brick.HEIGHT * 0.5;
-
-        debug.graphics.clear();
-        debug.graphics.beginFill(0xff00ff, 0.5);
-        debug.graphics.moveTo(middleBrickLeft, middleBrickTop);
-        debug.graphics.lineTo(middleBrickRight, middleBrickTop);
-        debug.graphics.lineTo(middleBrickRight, middleBrickBottom);
-        debug.graphics.lineTo(middleBrickLeft, middleBrickBottom);
-        debug.graphics.lineTo(middleBrickLeft, middleBrickTop);
-        debug.graphics.endFill();
-
-        debug.graphics.lineStyle(2, 0xffff00, 1);
-        debug.graphics.moveTo(middleBrickX, middleBrickY);
-        debug.graphics.lineTo(ball.x, ball.y);
-
-        point.x = ball.x - middleBrickX;
-        point.y = ball.y - middleBrickY;
-
-        var angleFromBrickToBall = VectorMath.angle(point);
-
-        var ballBelow = angleFromBrickToBall <= ballBelowMaxAngle || angleFromBrickToBall >= ballBelowMinAngle;
-        var ballAbove = angleFromBrickToBall <= ballAboveMaxAngle && angleFromBrickToBall >= ballAboveMinAngle;
-        var ballLeft = angleFromBrickToBall <= ballLeftMaxAngle && angleFromBrickToBall >= ballLeftMinAngle;
-        var ballRight = angleFromBrickToBall <= ballRightMaxAngle && angleFromBrickToBall >= ballRightMinAngle;
-
-        debugTextField.text = "";
-
-        if (ballBelow) debugTextField.text += "below ";
-        if (ballAbove) debugTextField.text += "above ";
-        if (ballLeft) debugTextField.text += "left ";
-        if (ballRight) debugTextField.text += "right ";
 
         if (!collideBrick(ball, middleBrickIndex)) {
             return;
@@ -146,6 +96,16 @@ class BrickCollider {
         numCollidedBricks += if (collideBrick(ball, bottomLeftBrickIndex)) 1 else 0;
         numCollidedBricks += if (collideBrick(ball, bottomBrickIndex)) 1 else 0;
         numCollidedBricks += if (collideBrick(ball, bottomRightBrickIndex)) 1 else 0;
+
+        point.x = ball.x - middleBrickX;
+        point.y = ball.y - middleBrickY;
+
+        var angleFromBrickToBall = VectorMath.angle(point);
+
+        var ballBelow = angleFromBrickToBall <= ballBelowMaxAngle || angleFromBrickToBall >= ballBelowMinAngle;
+        var ballAbove = angleFromBrickToBall <= ballAboveMaxAngle && angleFromBrickToBall >= ballAboveMinAngle;
+        var ballLeft = angleFromBrickToBall <= ballLeftMaxAngle && angleFromBrickToBall >= ballLeftMinAngle;
+        var ballRight = angleFromBrickToBall <= ballRightMaxAngle && angleFromBrickToBall >= ballRightMinAngle;
 
         var bounced = false;
         var onTop = false;
