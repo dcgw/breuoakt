@@ -38,14 +38,14 @@ class Game extends Playfield {
     static inline var BALL_SPAWN_MIN_Y = TOP_BRICK_Y + NUM_BRICKS_Y * (Brick.HEIGHT + BRICK_SPACING_Y)
             + BALL_SPAWN_MIN_DISTANCE_FROM_BRICKS;
 
-    static inline var TOP_BRICK_Y = 82;
-    static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
+    public static inline var TOP_BRICK_Y = 82;
+    public static inline var LEFT_BRICK_X = (WIDTH - (NUM_BRICKS_X - 1) * (Brick.WIDTH + BRICK_SPACING_X)) * 0.5;
 
     public static inline var NUM_BRICKS_X = 15;
-    static inline var NUM_BRICKS_Y = 7;
+    public static inline var NUM_BRICKS_Y = 7;
 
-    static inline var BRICK_SPACING_X = 6;
-    static inline var BRICK_SPACING_Y = 4;
+    public static inline var BRICK_SPACING_X = 6;
+    public static inline var BRICK_SPACING_Y = 4;
 
     static inline var SPRINGINESS = 0.2;
     static inline var HITTINESS = 0.5;

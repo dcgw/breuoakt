@@ -6,6 +6,7 @@ import hopscotch.graphics.Image;
 import flash.display.BitmapData;
 import flash.geom.Point;
 import hopscotch.Entity;
+import hopscotch.math.VectorMath;
 
 class Ball extends Entity {
     public static inline var WIDTH = 8;
@@ -15,6 +16,8 @@ class Ball extends Entity {
     public static inline var START_Y = Game.HEIGHT * 0.6;
 
     static inline var GRAVITY = 360 / Game.LOGIC_RATE / Game.LOGIC_RATE;
+
+    static inline var MAX_SPEED = Brick.HEIGHT * 0.5 - 1;
 
     public var prevX(default, null):Float;
     public var prevY(default, null):Float;
@@ -103,6 +106,12 @@ class Ball extends Entity {
         prevY = y;
 
         velocity.y += GRAVITY;
+
+        var speed = VectorMath.magnitude(velocity);
+
+        if (speed > MAX_SPEED) {
+            VectorMath.scale(velocity, MAX_SPEED / speed);
+        }
 
         x += velocity.x;
         y += velocity.y;
