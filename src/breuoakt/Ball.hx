@@ -67,6 +67,8 @@ class Ball extends Entity {
     }
 
     public function reset() {
+        Actuate.stop(image, null, true, false);
+
         prevX = START_X;
         prevY = START_Y;
 
