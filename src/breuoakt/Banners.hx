@@ -15,7 +15,7 @@ import hopscotch.graphics.Text;
 import hopscotch.engine.ScreenSize;
 
 class Banners implements IGraphic {
-    static inline var MAX_BANNERS = 32;
+    static inline var MAX_BANNERS = 64;
 
     static inline var MIN_SUFFICIENTLY_IMPRESSIVE_POINTS = 4;
     static inline var SUFFICIENTLY_IMPRESSIVE_POINTS_DECREASE_INTERVAL_FRAMES = 1 * Game.LOGIC_RATE;
