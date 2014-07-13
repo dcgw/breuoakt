@@ -2,6 +2,7 @@ package breuoakt;
 
 import motion.easing.Linear;
 import motion.easing.Cubic;
+import motion.easing.Quad;
 import flash.text.TextFormatAlign;
 import openfl.Assets;
 import motion.Actuate;
@@ -144,6 +145,72 @@ class Banners implements IGraphic {
 
         Actuate.tween(banner, 1, { scale: 128, alpha: 0 })
                 .ease(Cubic.easeIn);
+    }
+
+    public function onClear(points: Int) {
+        var mainBanner = getNextBanner();
+
+        mainBanner.text = "clear!\n ";
+        mainBanner.centerOrigin();
+        mainBanner.scale = 256;
+        mainBanner.x = Game.WIDTH * 0.5;
+        mainBanner.y = Game.HEIGHT * 0.5;// - 16;
+        mainBanner.alpha = 0;
+
+        var scoreBanner = getNextBanner();
+        scoreBanner.text = "\n0";
+        scoreBanner.centerOrigin();
+        scoreBanner.scale = 2;
+        scoreBanner.x = Game.WIDTH * 0.5;
+        scoreBanner.y = Game.HEIGHT * 0.5;// + 16;
+        scoreBanner.alpha = 0;
+
+        Actuate.tween(mainBanner, 1, { scale: 2, alpha: 1 })
+                .ease(Cubic.easeOut);
+
+        Actuate.tween(mainBanner, 2, { alpha: 0 }, false)
+                .ease(Cubic.easeIn)
+                .delay(1);
+
+        Actuate.tween(scoreBanner, 2.2, { scale: 16 })
+                .ease(Quad.easeIn)
+                .delay(0.8);
+
+        Actuate.tween(scoreBanner, 0.2, { alpha: 1 }, false)
+                .ease(Quad.easeInOut)
+                .delay(0.8);
+
+        Actuate.tween(scoreBanner, 2, { alpha : 0 }, false)
+                .ease(Cubic.easeIn)
+                .delay(1);
+
+        function updateScoreBanner(score:Int) {
+            scoreBanner.text = "\n" + score;
+            scoreBanner.centerOrigin();
+        }
+
+        Actuate.update(updateScoreBanner, 1.2, [0], [points])
+                .ease(Linear.easeNone)
+                .delay(0.8);
+
+        for (i in 0...10) {
+            var childBanner = getNextBanner();
+
+            childBanner.text = mainBanner.text;
+            childBanner.centerOrigin();
+            childBanner.x = mainBanner.x;
+            childBanner.y = mainBanner.y;
+            childBanner.alpha = 0;
+
+            Actuate.timer(1 + i * 0.2)
+                    .onComplete(function () {
+                        childBanner.alpha = mainBanner.alpha;
+                        childBanner.scale = mainBanner.scale;
+
+                        Actuate.tween(childBanner, 0.8, { scale: childBanner.scale + 30, alpha: 0 })
+                                .ease(Linear.easeNone);
+                    });
+        }
     }
 
     public function beginGraphic(frame:Int) {

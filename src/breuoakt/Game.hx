@@ -66,6 +66,8 @@ class Game extends Playfield {
 
     static inline var SCORE_SUBMIT_INTERVAL = 180;
 
+    static inline var CLEAR_BRICK_COUNT = 10;
+
     var startButton:Button;
 
     var kongregate:KongregateApi;
@@ -81,6 +83,7 @@ class Game extends Playfield {
     var numBallsInPlay:Int;
     var balls:Array<Ball>;
 
+    var numBricksInPlay:Int;
     var bricks:Array<Brick>;
 
     var brickCollider:BrickCollider;
@@ -104,6 +107,8 @@ class Game extends Playfield {
 
     var yay:Sound;
     var yaySoundTransform:SoundTransform;
+
+    var clear:Bool;
 
     static function main () {
         #if flash
@@ -310,8 +315,11 @@ class Game extends Playfield {
         for (brick in bricks) {
             brick.reset();
         }
+        numBricksInPlay = bricks.length;
 
         banners.reset();
+
+        clear = false;
     }
 
     function spawnBall(x:Float, y:Float) {
@@ -344,13 +352,32 @@ class Game extends Playfield {
 
         var points = 0;
         for (i in 0...brickCount) {
-            points += ball.multiplier * (1 << (numBallsInPlay - 1));
+            points += ball.multiplier * computeMultiplier();
             ball.incrementMultiplier();
         }
 
         banners.onHitBrick(points, ball.x, ball.y, hitTop);
 
         updateScore(score + points);
+
+        numBricksInPlay -= brickCount;
+        if (!clear && numBricksInPlay <= CLEAR_BRICK_COUNT) {
+            var points = (bricks.length - numBricksInPlay) * computeMultiplier();
+
+            banners.onClear(points);
+
+            updateScore(score + points);
+
+            for (brick in bricks) {
+                brick.respawn();
+            }
+
+            numBricksInPlay = bricks.length;
+        }
+    }
+
+    function computeMultiplier():Int {
+        return (1 << (numBallsInPlay - 1));
     }
 
     function collideWithPaddle (paddle:Paddle, ball:Ball) {
