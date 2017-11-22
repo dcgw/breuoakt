@@ -8,8 +8,6 @@ import haxe.PosInfos;
 import flash.media.SoundChannel;
 import hopscotch.math.VectorMath;
 import flash.geom.Point;
-import kong.KongregateApi;
-import kong.Kongregate;
 import hopscotch.math.Range;
 import flash.media.SoundTransform;
 import hopscotch.graphics.FontFace;
@@ -70,8 +68,6 @@ class Game extends Playfield {
 
     var startButton:Button;
 
-    var kongregate:KongregateApi;
-
     var score:Int;
     var submittedHighscore:Int;
 
@@ -127,19 +123,14 @@ class Game extends Playfield {
         var pointer = new Mouse(Lib.current.stage);
         engine.inputs.push(pointer);
 
-        Kongregate.loadApi(function(kongregate:KongregateApi) {
-            kongregate.services.connect();
-            engine.playfield = new Game(startButton, pointer, kongregate);
-            engine.start();
-        });
+        engine.playfield = new Game(startButton, pointer);
+        engine.start();
     }
 
-    public function new (startButton:Button, pointer:IPointer, kongregate:KongregateApi) {
+    public function new (startButton:Button, pointer:IPointer) {
         super();
 
         this.startButton = startButton;
-
-        this.kongregate = kongregate;
 
         score = 0;
         submittedHighscore = 0;
@@ -442,7 +433,6 @@ class Game extends Playfield {
     inline function checkSubmitHighscore(forceSubmit=false) {
         if (forceSubmit || lastScoreSubmitFrame + SCORE_SUBMIT_INTERVAL <= frame ) {
             if (score > submittedHighscore) {
-                kongregate.stats.submit("Highscore", score);
                 submittedHighscore = score;
                 lastScoreSubmitFrame = frame;
             }

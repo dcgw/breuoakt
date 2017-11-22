@@ -1,6 +1,0 @@
--cp .
--swf-version 9
--swf kong.hx.9.swf
---no-output
--xml haxedoc.xml
---macro ImportAll.run()
