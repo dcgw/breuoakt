@@ -2,7 +2,6 @@ package hopscotch.graphics;
 
 import flash.geom.Rectangle;
 import flash.text.TextFormatAlign;
-import flash.text.TextFormatAlign;
 import hopscotch.Static;
 import flash.geom.ColorTransform;
 import flash.text.TextFormat;
@@ -29,7 +28,7 @@ class Text implements IGraphic {
     public var text:String;
 
     public var fontFace:FontFace;
-    public var fontSize:Float;
+    public var fontSize:Int;
 
     public var color:UInt;
     public var alpha:Float;
